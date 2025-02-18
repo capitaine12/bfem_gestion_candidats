@@ -9,7 +9,7 @@ class NotesForm(QDialog):
     def __init__(self, parent=None, num_table=None, notes=None):
         super().__init__(parent)
         self.setWindowTitle(f"Modifier Notes - Candidat {num_table}")
-        self.setFixedSize(620, 300)
+        self.setFixedSize(620, 350)
 
         self.num_table = num_table
         self.is_editing = notes is not None  # Vérifie si on modifie une note
