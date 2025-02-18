@@ -1,0 +1,246 @@
+/* Style général de l'application */
+QMainWindow {
+    background-color: rgb(243, 243, 245);
+}
+/* Style général des boutons */
+QPushButton {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+    border: none;
+    text-align: center;
+}
+
+/* Style du texte du titre */
+QLabel#appTitle {
+    font-size: 50px;
+    font-family: "Arial Bold";
+    font-weight: bold;
+    color: rgb(255, 102, 0);
+    text-align: center;
+}
+
+
+/* Style des boutons du menu */
+QPushButton#menuButton {
+    background: rgb(255, 123, 0);
+}
+
+QPushButton#menuButton:hover {
+    background-color: rgba(253, 114, 0, 0.808);
+}
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DES FENETRE DE MODIFICATION & AJOUTER  :::::::::::::::::::::::::::::::::::  */
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DES FENETRE DE MODIFICATION & AJOUTER  :::::::::::::::::::::::::::::::::::  */
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DES FENETRE DE MODIFICATION & AJOUTER  :::::::::::::::::::::::::::::::::::  */
+
+QLineEdit#champ_input,
+QComboBox#champ_input {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid rgb(255, 123, 0);
+    border-radius: 15px;
+    background-color: white;
+}
+QLineEdit#champ_input:focus,
+QComboBox#champ_input:focus {
+    border-color: rgb(255, 123, 0);
+    outline: none;
+}
+
+QPushButton#btn_save {
+    background-color: rgb(0, 204, 0);
+    color: white;
+    padding: 10px;
+}
+QPushButton#btn_save:hover {
+    background-color: rgb(33, 145, 80);
+}
+
+QPushButton#btn_cancel {
+    background-color: rgb(255, 51, 0);
+    padding: 10px;
+}
+QPushButton#btn_cancel:hover {
+    background-color: rgb(192, 57, 43);
+}
+/* Marquer les champs invalides en rouge */
+QLineEdit.invalid {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DE LA PAGE LISTE DES CANDIDATS  :::::::::::::::::::::::::::::::::::  */
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DE LA PAGE LISTE DES CANDIDATS  :::::::::::::::::::::::::::::::::::  */
+/* ?::::::::::::::::::::::::::::::::::::::::: STYLISATION DE LA PAGE LISTE DES CANDIDATS  :::::::::::::::::::::::::::::::::::  */
+
+/* Style du titre */
+#titlePage {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+/* Style du champ de recherche */
+QLineEdit {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid rgba(253, 114, 0, 0.808);
+    border-radius: 18px;
+    /* color: rgba(255, 255, 255, 0.575); */
+}
+
+/* Style du bouton de recherche */
+QPushButton#searchButton {
+    padding: 8px;
+    background-color: rgb(255, 123, 0); 
+}
+
+QPushButton#searchButton:hover {
+    background-color: rgba(253, 114, 0, 0.808);
+}
+/* Style du tableau */
+#candidatsTable {
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background-color: white;
+}
+QTableWidget::item {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+QHeaderView::section {
+    background-color: rgba(253, 114, 0, 0.808);
+    color: white;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* style des boutons modifier, ajouter & suppression */
+
+/* Style du bouton Détails */
+QPushButton#btn_details {
+    background-color: rgb(49, 49, 252);
+}
+QPushButton#btn_details:hover {
+    background-color: rgb(80, 80, 253);
+}
+
+/* Style du bouton Notes */
+QPushButton#btn_notes{
+    background-color: rgb(75, 0, 130);
+}
+QPushButton#btn_notes:hover {
+    background-color: rgb(118, 3, 201);
+}
+
+/* Style du bouton Ajouter */
+QPushButton#btn_add {
+    background-color: rgb(0, 204, 0); 
+}
+QPushButton#btn_add:hover {
+    background-color: rgb(96, 250, 96);
+}
+
+/* Style du bouton Modifier */
+QPushButton#btn_edit {
+    background-color: rgb(255, 192, 0); 
+}
+QPushButton#btn_edit:hover {
+    background-color: rgb(212, 163, 13);
+}
+
+/* Style du bouton Supprimer */
+QPushButton#btn_delete {
+    background-color: rgb(255, 51, 0); 
+}
+QPushButton#btn_delete:hover {
+    background-color: rgb(192, 57, 43);
+}
+
+/* Style du bouton des boutons d'alerte  */
+QPushButton[text="Oui"] {
+    background-color: rgb(0, 204, 0); 
+    padding: 8px;
+}
+QPushButton[text="Oui"]:hover {
+    background-color: rgb(40, 177, 40);
+}
+
+QPushButton[text="Non"] {
+    background-color: rgb(255, 51, 0); 
+    padding: 8px;
+}
+QPushButton[text="Non"]:hover {
+    background-color: #c0392b;
+}
+/* Style du bouton OK */
+QPushButton[text="OK"] {
+    background-color: rgb(255, 123, 0);
+    padding: 8px 15px;
+}
+QPushButton[text="OK"]:hover {
+    background-color: rgba(253, 114, 0, 0.808);
+}
+
+
+
+
+#iaCard {
+    background-color: #f0f0f0;  
+    border-radius: 10px;
+    padding: 10px;           
+    margin: 10px;                
+    border: 2px solid rgba(253, 114, 0, 0.808);
+    
+}
+
+#iaNameLabel {
+    font-size: 16px;             
+    font-weight: bold;
+    color: #000;     
+}
+
+#iaAddressLabel,
+#iaTelLabel,
+#iaEmailLabel,
+#iaSiteLabel {
+    font-size: 14px;             
+    color: rgb(85, 85, 85);            
+}
+
+
+#closeButton {
+    background-color: rgb(255, 77, 77);   
+    color: white;            
+    border: none;          
+    padding: 10px;               
+    border-radius: 5px;
+    width: 30%;          
+}
+
+#closeButton:hover {
+    background-color: rgb(255, 26, 26);   
+}
+
+#showCardsButton {
+    background-color: #4CAF50;    
+    color: white;                  
+    border: none;                  
+    padding: 10px; 
+    border-radius: 5px;           
+}
+
+#showCardsButton:hover {
+    background-color: #45a049;    
+}
+
+#closeButton {
+    width: 150px; 
+    margin: auto; 
+}
+#showCardsButton {
+    width: 260px; 
+    margin: auto; 
+}

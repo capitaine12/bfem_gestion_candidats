@@ -1,0 +1,30 @@
+@startuml
+actor "Administrateur (Jury)" as Admin
+actor "Candidat" as Candidat
+
+rectangle "Gestion des candidats BFEM" {
+    usecase "Ajouter un candidat" as UC1
+    usecase "Modifier un candidat" as UC2
+    usecase "Supprimer un candidat" as UC3
+    usecase "Importer candidats depuis Excel" as UC4
+    usecase "Saisir les notes du 1er tour" as UC5
+    usecase "Saisir les notes du 2nd tour" as UC6
+    usecase "Appliquer les règles de délibération" as UC7
+    usecase "Générer relevés et PV en PDF" as UC8
+    usecase "Afficher les statistiques des résultats" as UC9
+    usecase "Consulter son statut d'admission" as UC10
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+
+Candidat --> UC10
+
+@enduml
