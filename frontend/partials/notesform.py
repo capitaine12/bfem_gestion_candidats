@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QHBoxLayout, QMessageBox
 from backend.database import update_notes
+from frontend.partials import notesdialog
+from frontend.partials.notesdialog import NotesDialog
 
 class NotesForm(QDialog):
     """ Fenêtre pour modifier les notes d’un candidat """
@@ -7,7 +9,7 @@ class NotesForm(QDialog):
         super().__init__(parent)
         self.setWindowTitle(f"Modifier Notes - Candidat {num_table}")
         self.setFixedSize(400, 520)
-
+        
         self.setStyleSheet("""
         QLineEdit {
             padding: 6px;
@@ -24,6 +26,7 @@ class NotesForm(QDialog):
     """)
 
         self.num_table = num_table
+        self.is_editing = notesdialog is not None
 
         layout = QVBoxLayout()
 
