@@ -1,0 +1,409 @@
+2025-02-19 22:24:55,423 - INFO - 🚀 Démarrage du script main.py
+2025-02-19 22:24:57,234 - INFO - ✅ Tables créées avec succès.
+2025-02-19 22:24:57,236 - INFO -  Début de l'importation des candidats depuis Excel...
+2025-02-19 22:24:57,893 - INFO - ✅ Candidat inséré : 53 - DEMBA AGNE
+2025-02-19 22:24:57,893 - INFO - ✅ Candidat inséré : 54 - MBENE AW
+2025-02-19 22:24:57,894 - INFO - ✅ Candidat inséré : 55 - MOR DIEYE BA
+2025-02-19 22:24:57,895 - INFO - ✅ Candidat inséré : 56 - THIERNO MOUSSA BA
+2025-02-19 22:24:57,895 - INFO - ✅ Candidat inséré : 57 - BAYE DEMBA BA
+2025-02-19 22:24:57,896 - INFO - ✅ Candidat inséré : 58 - FATOU DIOP BA
+2025-02-19 22:24:57,897 - INFO - ✅ Candidat inséré : 59 - ABDOU BA
+2025-02-19 22:24:57,897 - INFO - ✅ Candidat inséré : 60 - SAYNABOU BABOU
+2025-02-19 22:24:57,898 - INFO - ✅ Candidat inséré : 61 - MAME THIERNO BADIANE
+2025-02-19 22:24:57,899 - INFO - ✅ Candidat inséré : 62 - SOKHNA BALL
+2025-02-19 22:24:57,901 - INFO - ✅ Candidat inséré : 63 - FATOU DIOP BANE
+2025-02-19 22:24:57,902 - INFO - ✅ Candidat inséré : 64 - ABY BOYE
+2025-02-19 22:24:57,904 - INFO - ✅ Candidat inséré : 65 - CHRISTOPHE CISS
+2025-02-19 22:24:57,905 - INFO - ✅ Candidat inséré : 66 - HABIB CISSE
+2025-02-19 22:24:57,907 - INFO - ✅ Candidat inséré : 67 - KHALIFA CISSE
+2025-02-19 22:24:57,908 - INFO - ✅ Candidat inséré : 68 - OUMAR COLY
+2025-02-19 22:24:57,909 - INFO - ✅ Candidat inséré : 69 - ABDOULAYE COLY
+2025-02-19 22:24:57,910 - INFO - ✅ Candidat inséré : 70 - MAMADOU DANSOKHO
+2025-02-19 22:24:57,911 - INFO - ✅ Candidat inséré : 71 - BOUBACAR DEMBELE
+2025-02-19 22:24:57,913 - INFO - ✅ Candidat inséré : 72 - MOUSTAPHA DEME
+2025-02-19 22:24:57,914 - INFO - ✅ Candidat inséré : 73 - ABY MARIE DIAFOUNE
+2025-02-19 22:24:57,915 - INFO - ✅ Candidat inséré : 74 - MASSAER DIAGNE
+2025-02-19 22:24:57,916 - INFO - ✅ Candidat inséré : 75 - FODE DIALLO
+2025-02-19 22:24:57,918 - INFO - ✅ Candidat inséré : 76 - HENRIETTE DIALLO
+2025-02-19 22:24:57,922 - INFO - ✅ Candidat inséré : 77 - LAHAT DIALLO
+2025-02-19 22:24:57,924 - INFO - ✅ Candidat inséré : 78 - YOUSSOU DIARRA
+2025-02-19 22:24:57,925 - INFO - ✅ Candidat inséré : 79 - AICHA DIENG
+2025-02-19 22:24:57,926 - INFO - ✅ Candidat inséré : 80 - FATOUMATA OUSSEYNOU DIOP
+2025-02-19 22:24:57,927 - INFO - ✅ Candidat inséré : 81 - AMADOU DIOP
+2025-02-19 22:24:57,928 - INFO - ✅ Candidat inséré : 82 - SALIMATA DIOP
+2025-02-19 22:24:57,929 - INFO - ✅ Candidat inséré : 83 - DAOUDA DIOP
+2025-02-19 22:24:57,930 - INFO - ✅ Candidat inséré : 84 - MOUHAMADOU DIOP
+2025-02-19 22:24:57,931 - INFO - ✅ Candidat inséré : 85 - FALLOU DIOP
+2025-02-19 22:24:57,933 - INFO - ✅ Candidat inséré : 86 - FATOU DIOUF
+2025-02-19 22:24:57,934 - INFO - ✅ Candidat inséré : 87 - SAKHER DIOUF
+2025-02-19 22:24:57,935 - INFO - ✅ Candidat inséré : 88 - ALIOUNE FALL
+2025-02-19 22:24:57,938 - INFO - ✅ Candidat inséré : 89 - FATOU KANE FALL
+2025-02-19 22:24:57,940 - INFO - ✅ Candidat inséré : 90 - MAGUETTE FALL
+2025-02-19 22:24:57,941 - INFO - ✅ Candidat inséré : 91 - AMADOU FALL
+2025-02-19 22:24:57,943 - INFO - ✅ Candidat inséré : 92 - MBAYE FALL
+2025-02-19 22:24:57,944 - INFO - ✅ Candidat inséré : 93 - WALLY FALL
+2025-02-19 22:24:57,945 - INFO - ✅ Candidat inséré : 94 - MAYIB FALL
+2025-02-19 22:24:57,947 - INFO - ✅ Candidat inséré : 95 - MAMOUR FAYE
+2025-02-19 22:24:57,948 - INFO - ✅ Candidat inséré : 96 - PHILIPPE FAYE
+2025-02-19 22:24:57,950 - INFO - ✅ Candidat inséré : 97 - BIRANE FAYE
+2025-02-19 22:24:57,952 - INFO - ✅ Candidat inséré : 98 - IBRA GOMIS
+2025-02-19 22:24:57,957 - INFO - ✅ Candidat inséré : 99 - PENDA GUEYE
+2025-02-19 22:24:57,959 - INFO - ✅ Candidat inséré : 100 - MADICKE KANE
+2025-02-19 22:24:57,960 - INFO - ✅ Candidat inséré : 101 - OUSMANE KANTE
+2025-02-19 22:24:57,961 - INFO - ✅ Candidat inséré : 102 - DIEYNABA KASSE
+2025-02-19 22:24:57,962 - INFO - ✅ Candidat inséré : 103 - KHAOUSSOU KASSE
+2025-02-19 22:24:57,963 - INFO - ✅ Candidat inséré : 104 - ANTOINE KEITA
+2025-02-19 22:24:57,964 - INFO - ✅ Candidat inséré : 105 - MAURY KOITE
+2025-02-19 22:24:57,965 - INFO - ✅ Candidat inséré : 106 - ANSOU KONARE
+2025-02-19 22:24:57,967 - INFO - ✅ Candidat inséré : 107 - CHEIKHOU KOUYATE
+2025-02-19 22:24:57,968 - INFO - ✅ Candidat inséré : 108 - MAME AISSATOU KATY LEYE
+2025-02-19 22:24:57,973 - INFO - ✅ Candidat inséré : 109 - BELLA LEYE
+2025-02-19 22:24:57,974 - INFO - ✅ Candidat inséré : 110 - JEAN PIERRE LO
+2025-02-19 22:24:57,975 - INFO - ✅ Candidat inséré : 111 - CHEIKH LY
+2025-02-19 22:24:57,977 - INFO - ✅ Candidat inséré : 112 - LAMARANA LY
+2025-02-19 22:24:57,977 - INFO - ✅ Candidat inséré : 113 - PAPE DEMBA MANGANE
+2025-02-19 22:24:57,978 - INFO - ✅ Candidat inséré : 114 - SENGANE MBAYE
+2025-02-19 22:24:57,979 - INFO - ✅ Candidat inséré : 115 - KHADY MBENGUE
+2025-02-19 22:24:57,980 - INFO - ✅ Candidat inséré : 116 - FATIMATA MBOW
+2025-02-19 22:24:57,981 - INFO - ✅ Candidat inséré : 117 - MANSOUR MBOW
+2025-02-19 22:24:57,982 - INFO - ✅ Candidat inséré : 118 - SAMBA NDAO
+2025-02-19 22:24:57,984 - INFO - ✅ Candidat inséré : 119 - MAMDOU BARRY NDIAYE
+2025-02-19 22:24:57,986 - INFO - ✅ Candidat inséré : 120 - DAME NDIAYE
+2025-02-19 22:24:57,989 - INFO - ✅ Candidat inséré : 121 - MARCEL NDIAYE
+2025-02-19 22:24:57,990 - INFO - ✅ Candidat inséré : 122 - MAIMOUNA NDIR
+2025-02-19 22:24:57,991 - INFO - ✅ Candidat inséré : 123 - MOHAMED NGUER
+2025-02-19 22:24:57,992 - INFO - ✅ Candidat inséré : 124 - ARONA NIANG
+2025-02-19 22:24:57,993 - INFO - ✅ Candidat inséré : 125 - MBAYE DIEYE NIANG
+2025-02-19 22:24:57,994 - INFO - ✅ Candidat inséré : 126 - MAMADOU IBRA NIANG
+2025-02-19 22:24:57,994 - INFO - ✅ Candidat inséré : 127 - BOUBACAR PENE
+2025-02-19 22:24:57,995 - INFO - ✅ Candidat inséré : 128 - FILLY POUYE
+2025-02-19 22:24:57,996 - INFO - ✅ Candidat inséré : 129 - NDOFENE PRERA
+2025-02-19 22:24:57,997 - INFO - ✅ Candidat inséré : 130 - NGONE SALL
+2025-02-19 22:24:57,998 - INFO - ✅ Candidat inséré : 131 - KHADIM SALL
+2025-02-19 22:24:57,999 - INFO - ✅ Candidat inséré : 132 - MANDIAYE SAMB
+2025-02-19 22:24:58,000 - INFO - ✅ Candidat inséré : 133 - SERIGNE NGOUDA SARR
+2025-02-19 22:24:58,006 - INFO - ✅ Candidat inséré : 134 - MASSAER SARR
+2025-02-19 22:24:58,008 - INFO - ✅ Candidat inséré : 135 - SECKA SASYLVA
+2025-02-19 22:24:58,009 - INFO - ✅ Candidat inséré : 136 - FRANCISCA SECK
+2025-02-19 22:24:58,010 - INFO - ✅ Candidat inséré : 137 - RAMA SECK
+2025-02-19 22:24:58,011 - INFO - ✅ Candidat inséré : 138 - MADJIGUENE SECK
+2025-02-19 22:24:58,012 - INFO - ✅ Candidat inséré : 139 - MEISSA SENE
+2025-02-19 22:24:58,012 - INFO - ✅ Candidat inséré : 140 - PAPA MAMADI SENE
+2025-02-19 22:24:58,014 - INFO - ✅ Candidat inséré : 141 - ELODIE SENE
+2025-02-19 22:24:58,015 - INFO - ✅ Candidat inséré : 142 - STEPHANIE SIDIBE
+2025-02-19 22:24:58,016 - INFO - ✅ Candidat inséré : 143 - FATOU BINETOU SIDIBE
+2025-02-19 22:24:58,017 - INFO - ✅ Candidat inséré : 144 - MAYACINE SOUARE
+2025-02-19 22:24:58,018 - INFO - ✅ Candidat inséré : 145 - MACKY SY
+2025-02-19 22:24:58,021 - INFO - ✅ Candidat inséré : 146 - MODOU MACTAR TALL
+2025-02-19 22:24:58,023 - INFO - ✅ Candidat inséré : 147 - FANTA FIFI TRAORE
+2025-02-19 22:24:58,024 - INFO - ✅ Candidat inséré : 148 - WAGANE WADE
+2025-02-19 22:24:58,025 - INFO - ✅ Candidat inséré : 149 - MOCTAR WAGUE
+2025-02-19 22:24:58,026 - INFO - ✅ Candidat inséré : 150 - FAYA WANE
+2025-02-19 22:24:58,027 - INFO - ✅ Candidat inséré : 151 - SOKHNA PENDA XAVIER
+2025-02-19 22:24:58,130 - INFO - Les candidats ont été importés avec succès depuis Excel.
+2025-02-19 22:24:58,151 - INFO - 🚀 Démarrage de l'application
+2025-02-19 22:24:58,182 - INFO - 📌 Importation des notes et livrets scolaires depuis Excel...
+2025-02-19 22:24:58,183 - INFO - 🔍 Début de l'importation des notes depuis Excel...
+2025-02-19 22:24:58,245 - INFO - ✅ Notes insérées pour le candidat 53
+2025-02-19 22:24:58,247 - INFO - ✅ Notes insérées pour le candidat 54
+2025-02-19 22:24:58,249 - INFO - ✅ Notes insérées pour le candidat 55
+2025-02-19 22:24:58,250 - INFO - ✅ Notes insérées pour le candidat 56
+2025-02-19 22:24:58,251 - INFO - ✅ Notes insérées pour le candidat 57
+2025-02-19 22:24:58,253 - INFO - ✅ Notes insérées pour le candidat 58
+2025-02-19 22:24:58,254 - INFO - ✅ Notes insérées pour le candidat 59
+2025-02-19 22:24:58,255 - INFO - ✅ Notes insérées pour le candidat 60
+2025-02-19 22:24:58,256 - INFO - ✅ Notes insérées pour le candidat 61
+2025-02-19 22:24:58,258 - INFO - ✅ Notes insérées pour le candidat 62
+2025-02-19 22:24:58,261 - INFO - ✅ Notes insérées pour le candidat 63
+2025-02-19 22:24:58,261 - INFO - ✅ Notes insérées pour le candidat 64
+2025-02-19 22:24:58,262 - INFO - ✅ Notes insérées pour le candidat 65
+2025-02-19 22:24:58,263 - INFO - ✅ Notes insérées pour le candidat 66
+2025-02-19 22:24:58,264 - INFO - ✅ Notes insérées pour le candidat 67
+2025-02-19 22:24:58,264 - INFO - ✅ Notes insérées pour le candidat 68
+2025-02-19 22:24:58,265 - INFO - ✅ Notes insérées pour le candidat 69
+2025-02-19 22:24:58,266 - INFO - ✅ Notes insérées pour le candidat 70
+2025-02-19 22:24:58,267 - INFO - ✅ Notes insérées pour le candidat 71
+2025-02-19 22:24:58,268 - INFO - ✅ Notes insérées pour le candidat 72
+2025-02-19 22:24:58,270 - INFO - ✅ Notes insérées pour le candidat 73
+2025-02-19 22:24:58,271 - INFO - ✅ Notes insérées pour le candidat 74
+2025-02-19 22:24:58,272 - INFO - ✅ Notes insérées pour le candidat 75
+2025-02-19 22:24:58,275 - INFO - ✅ Notes insérées pour le candidat 76
+2025-02-19 22:24:58,276 - INFO - ✅ Notes insérées pour le candidat 77
+2025-02-19 22:24:58,277 - INFO - ✅ Notes insérées pour le candidat 78
+2025-02-19 22:24:58,278 - INFO - ✅ Notes insérées pour le candidat 79
+2025-02-19 22:24:58,279 - INFO - ✅ Notes insérées pour le candidat 80
+2025-02-19 22:24:58,279 - INFO - ✅ Notes insérées pour le candidat 81
+2025-02-19 22:24:58,280 - INFO - ✅ Notes insérées pour le candidat 82
+2025-02-19 22:24:58,281 - INFO - ✅ Notes insérées pour le candidat 83
+2025-02-19 22:24:58,282 - INFO - ✅ Notes insérées pour le candidat 84
+2025-02-19 22:24:58,283 - INFO - ✅ Notes insérées pour le candidat 85
+2025-02-19 22:24:58,284 - INFO - ✅ Notes insérées pour le candidat 86
+2025-02-19 22:24:58,284 - INFO - ✅ Notes insérées pour le candidat 87
+2025-02-19 22:24:58,285 - INFO - ✅ Notes insérées pour le candidat 88
+2025-02-19 22:24:58,287 - INFO - ✅ Notes insérées pour le candidat 89
+2025-02-19 22:24:58,288 - INFO - ✅ Notes insérées pour le candidat 90
+2025-02-19 22:24:58,289 - INFO - ✅ Notes insérées pour le candidat 91
+2025-02-19 22:24:58,290 - INFO - ✅ Notes insérées pour le candidat 92
+2025-02-19 22:24:58,291 - INFO - ✅ Notes insérées pour le candidat 93
+2025-02-19 22:24:58,292 - INFO - ✅ Notes insérées pour le candidat 94
+2025-02-19 22:24:58,293 - INFO - ✅ Notes insérées pour le candidat 95
+2025-02-19 22:24:58,294 - INFO - ✅ Notes insérées pour le candidat 96
+2025-02-19 22:24:58,297 - INFO - ✅ Notes insérées pour le candidat 97
+2025-02-19 22:24:58,299 - INFO - ✅ Notes insérées pour le candidat 98
+2025-02-19 22:24:58,300 - INFO - ✅ Notes insérées pour le candidat 99
+2025-02-19 22:24:58,301 - INFO - ✅ Notes insérées pour le candidat 100
+2025-02-19 22:24:58,302 - INFO - ✅ Notes insérées pour le candidat 101
+2025-02-19 22:24:58,304 - INFO - ✅ Notes insérées pour le candidat 102
+2025-02-19 22:24:58,305 - INFO - ✅ Notes insérées pour le candidat 103
+2025-02-19 22:24:58,308 - INFO - ✅ Notes insérées pour le candidat 104
+2025-02-19 22:24:58,309 - INFO - ✅ Notes insérées pour le candidat 105
+2025-02-19 22:24:58,310 - INFO - ✅ Notes insérées pour le candidat 106
+2025-02-19 22:24:58,311 - INFO - ✅ Notes insérées pour le candidat 107
+2025-02-19 22:24:58,312 - INFO - ✅ Notes insérées pour le candidat 108
+2025-02-19 22:24:58,313 - INFO - ✅ Notes insérées pour le candidat 109
+2025-02-19 22:24:58,314 - INFO - ✅ Notes insérées pour le candidat 110
+2025-02-19 22:24:58,315 - INFO - ✅ Notes insérées pour le candidat 111
+2025-02-19 22:24:58,316 - INFO - ✅ Notes insérées pour le candidat 112
+2025-02-19 22:24:58,316 - INFO - ✅ Notes insérées pour le candidat 113
+2025-02-19 22:24:58,317 - INFO - ✅ Notes insérées pour le candidat 114
+2025-02-19 22:24:58,318 - INFO - ✅ Notes insérées pour le candidat 115
+2025-02-19 22:24:58,319 - INFO - ✅ Notes insérées pour le candidat 116
+2025-02-19 22:24:58,320 - INFO - ✅ Notes insérées pour le candidat 117
+2025-02-19 22:24:58,322 - INFO - ✅ Notes insérées pour le candidat 118
+2025-02-19 22:24:58,322 - INFO - ✅ Notes insérées pour le candidat 119
+2025-02-19 22:24:58,328 - INFO - ✅ Notes insérées pour le candidat 120
+2025-02-19 22:24:58,329 - INFO - ✅ Notes insérées pour le candidat 121
+2025-02-19 22:24:58,329 - INFO - ✅ Notes insérées pour le candidat 122
+2025-02-19 22:24:58,330 - INFO - ✅ Notes insérées pour le candidat 123
+2025-02-19 22:24:58,331 - INFO - ✅ Notes insérées pour le candidat 124
+2025-02-19 22:24:58,332 - INFO - ✅ Notes insérées pour le candidat 125
+2025-02-19 22:24:58,332 - INFO - ✅ Notes insérées pour le candidat 126
+2025-02-19 22:24:58,333 - INFO - ✅ Notes insérées pour le candidat 127
+2025-02-19 22:24:58,335 - INFO - ✅ Notes insérées pour le candidat 128
+2025-02-19 22:24:58,337 - INFO - ✅ Notes insérées pour le candidat 129
+2025-02-19 22:24:58,338 - INFO - ✅ Notes insérées pour le candidat 130
+2025-02-19 22:24:58,339 - INFO - ✅ Notes insérées pour le candidat 131
+2025-02-19 22:24:58,341 - INFO - ✅ Notes insérées pour le candidat 132
+2025-02-19 22:24:58,344 - INFO - ✅ Notes insérées pour le candidat 133
+2025-02-19 22:24:58,344 - INFO - ✅ Notes insérées pour le candidat 134
+2025-02-19 22:24:58,345 - INFO - ✅ Notes insérées pour le candidat 135
+2025-02-19 22:24:58,346 - INFO - ✅ Notes insérées pour le candidat 136
+2025-02-19 22:24:58,347 - INFO - ✅ Notes insérées pour le candidat 137
+2025-02-19 22:24:58,348 - INFO - ✅ Notes insérées pour le candidat 138
+2025-02-19 22:24:58,348 - INFO - ✅ Notes insérées pour le candidat 139
+2025-02-19 22:24:58,349 - INFO - ✅ Notes insérées pour le candidat 140
+2025-02-19 22:24:58,350 - INFO - ✅ Notes insérées pour le candidat 141
+2025-02-19 22:24:58,351 - INFO - ✅ Notes insérées pour le candidat 142
+2025-02-19 22:24:58,351 - INFO - ✅ Notes insérées pour le candidat 143
+2025-02-19 22:24:58,353 - INFO - ✅ Notes insérées pour le candidat 144
+2025-02-19 22:24:58,354 - INFO - ✅ Notes insérées pour le candidat 145
+2025-02-19 22:24:58,355 - INFO - ✅ Notes insérées pour le candidat 146
+2025-02-19 22:24:58,357 - INFO - ✅ Notes insérées pour le candidat 147
+2025-02-19 22:24:58,359 - INFO - ✅ Notes insérées pour le candidat 148
+2025-02-19 22:24:58,361 - INFO - ✅ Notes insérées pour le candidat 149
+2025-02-19 22:24:58,362 - INFO - ✅ Notes insérées pour le candidat 150
+2025-02-19 22:24:58,363 - INFO - ✅ Notes insérées pour le candidat 151
+2025-02-19 22:24:58,478 - INFO - 🔄 Mise à jour des statuts des candidats...
+2025-02-19 22:24:58,480 - INFO - ✅ Données trouvées pour 53: (9.5, 10.0, 11.0, 8.0, 9.0, 3.0, 7.0, 12.0, 12.0, 6.0, 11.0, 3.0, 12.0, 14.0, 0.0, None)
+2025-02-19 22:24:58,589 - INFO - 🎯 Statut final : Second Tour pour 53
+2025-02-19 22:24:58,591 - INFO - ✅ Données trouvées pour 54: (0.0, 0.0, 0.0, 0.0, 10.0, 2.0, 14.0, 7.0, 9.0, 4.0, 5.0, 9.0, 10.0, 15.0, 11.0, None)
+2025-02-19 22:24:58,679 - INFO - 🎯 Statut final : Échoué pour 54
+2025-02-19 22:24:58,681 - INFO - ✅ Données trouvées pour 55: (12.0, 14.0, 10.0, 11.0, 12.0, 7.0, 5.0, 7.0, 11.0, 14.0, 14.0, 7.0, 8.0, 9.0, 11.0, None)
+2025-02-19 22:24:58,763 - INFO - 🎯 Statut final : Repêchable au 1er tour pour 55
+2025-02-19 22:24:58,764 - INFO - ✅ Données trouvées pour 56: (12.0, 12.0, 10.0, 10.0, 5.0, 2.0, 7.0, 16.0, 10.0, 8.0, 5.0, 9.0, 11.0, 0.0, 0.0, None)
+2025-02-19 22:24:58,912 - INFO - 🎯 Statut final : Échoué pour 56
+2025-02-19 22:24:58,915 - INFO - ✅ Données trouvées pour 57: (11.0, 11.0, 11.0, 8.0, 7.0, 9.0, 10.0, 10.0, 11.0, 7.0, 6.0, 8.0, 9.0, 0.0, 11.0, None)
+2025-02-19 22:24:59,062 - INFO - 🎯 Statut final : Échoué pour 57
+2025-02-19 22:24:59,063 - INFO - ✅ Données trouvées pour 58: (11.0, 9.5, 10.0, 8.0, 7.0, 4.0, 10.0, 9.0, 12.0, 3.0, 15.0, 10.0, 12.0, 9.0, 0.0, None)
+2025-02-19 22:24:59,223 - INFO - 🎯 Statut final : Second Tour pour 58
+2025-02-19 22:24:59,226 - INFO - ✅ Données trouvées pour 59: (12.0, 11.0, 11.0, 8.0, 12.0, 6.0, 6.0, 13.0, 5.0, 3.0, 15.0, 6.0, 12.0, 0.0, 0.0, None)
+2025-02-19 22:24:59,305 - INFO - 🎯 Statut final : Échoué pour 59
+2025-02-19 22:24:59,306 - INFO - ✅ Données trouvées pour 60: (0.0, 0.0, 0.0, 0.0, 12.0, 10.0, 11.0, 8.0, 7.0, 7.0, 13.0, 9.0, 11.0, 8.0, 10.0, None)
+2025-02-19 22:24:59,387 - INFO - 🎯 Statut final : Second Tour pour 60
+2025-02-19 22:24:59,388 - INFO - ✅ Données trouvées pour 61: (11.0, 10.0, 12.0, 9.0, 8.0, 1.0, 5.0, 7.0, 6.0, 6.0, 11.0, 8.0, 11.0, 13.0, 13.0, None)
+2025-02-19 22:24:59,469 - INFO - 🎯 Statut final : Échoué pour 61
+2025-02-19 22:24:59,471 - INFO - ✅ Données trouvées pour 62: (10.0, 13.0, 12.0, 9.0, 9.0, 12.0, 12.0, 8.0, 3.0, 11.0, 11.0, 16.0, 11.0, 0.0, 0.0, None)
+2025-02-19 22:24:59,567 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 62
+2025-02-19 22:24:59,569 - INFO - ✅ Données trouvées pour 63: (0.0, 0.0, 0.0, 0.0, 9.0, 6.0, 6.0, 7.0, 3.0, 5.0, 17.0, 3.0, 13.0, 7.0, 10.0, None)
+2025-02-19 22:24:59,772 - INFO - 🎯 Statut final : Échoué pour 63
+2025-02-19 22:24:59,775 - INFO - ✅ Données trouvées pour 64: (12.0, 12.0, 11.0, 14.0, 7.0, 5.0, 9.0, 7.0, 6.0, 9.0, 7.0, 9.0, 15.0, 7.0, 12.0, None)
+2025-02-19 22:24:59,859 - INFO - 🎯 Statut final : Échoué pour 64
+2025-02-19 22:24:59,861 - INFO - ✅ Données trouvées pour 65: (0.0, 0.0, 0.0, 0.0, 7.0, 2.0, 14.0, 7.0, 9.0, 3.0, 7.0, 5.0, 16.0, 9.0, 12.0, None)
+2025-02-19 22:24:59,942 - INFO - 🎯 Statut final : Échoué pour 65
+2025-02-19 22:24:59,943 - INFO - ✅ Données trouvées pour 66: (15.0, 15.0, 10.0, 11.0, 10.0, 10.0, 5.0, 8.0, 3.0, 3.0, 6.0, 7.0, 11.0, 13.0, 12.0, None)
+2025-02-19 22:25:00,025 - INFO - 🎯 Statut final : Échoué pour 66
+2025-02-19 22:25:00,026 - INFO - ✅ Données trouvées pour 67: (0.0, 0.0, 0.0, 0.0, 11.0, 4.0, 14.0, 9.0, 5.0, 11.0, 6.0, 4.0, 9.0, 9.0, 0.0, None)
+2025-02-19 22:25:00,099 - INFO - 🎯 Statut final : Échoué pour 67
+2025-02-19 22:25:00,101 - INFO - ✅ Données trouvées pour 68: (10.0, 12.0, 13.0, 9.0, 11.0, 11.0, 5.0, 8.0, 4.0, 10.0, 8.0, 4.0, 11.0, 0.0, 11.0, None)
+2025-02-19 22:25:00,251 - INFO - 🎯 Statut final : Échoué pour 68
+2025-02-19 22:25:00,255 - INFO - ✅ Données trouvées pour 69: (10.0, 11.0, 11.0, 10.0, 16.0, 18.0, 6.0, 8.0, 4.0, 7.0, 8.0, 11.0, 10.0, 16.0, 12.0, None)
+2025-02-19 22:25:00,415 - INFO - 🎯 Statut final : Second Tour pour 69
+2025-02-19 22:25:00,416 - INFO - ✅ Données trouvées pour 70: (0.0, 0.0, 0.0, 0.0, 5.0, 1.0, 14.0, 8.0, 8.0, 9.0, 12.0, 5.0, 11.0, 12.0, 10.0, None)
+2025-02-19 22:25:00,565 - INFO - 🎯 Statut final : Échoué pour 70
+2025-02-19 22:25:00,566 - INFO - ✅ Données trouvées pour 71: (11.0, 14.0, 14.0, 9.0, 11.0, 4.0, 10.0, 7.0, 5.0, 9.0, 12.0, 6.0, 10.0, 8.0, 0.0, None)
+2025-02-19 22:25:00,648 - INFO - 🎯 Statut final : Échoué pour 71
+2025-02-19 22:25:00,649 - INFO - ✅ Données trouvées pour 72: (0.0, 0.0, 0.0, 0.0, 5.0, 11.0, 15.0, 12.0, 11.0, 4.0, 6.0, 8.0, 8.0, 12.0, 0.0, None)
+2025-02-19 22:25:00,807 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 72
+2025-02-19 22:25:00,810 - INFO - ✅ Données trouvées pour 73: (10.0, 13.0, 11.0, 11.0, 10.0, 1.0, 5.0, 12.0, 15.0, 5.0, 5.0, 5.0, 11.0, 8.0, 10.0, None)
+2025-02-19 22:25:00,927 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 73
+2025-02-19 22:25:00,929 - INFO - ✅ Données trouvées pour 74: (10.0, 11.0, 9.75, 10.0, 11.0, 5.0, 12.0, 10.0, 4.0, 6.0, 10.0, 7.0, 9.0, 7.0, 10.0, None)
+2025-02-19 22:25:01,096 - INFO - 🎯 Statut final : Échoué pour 74
+2025-02-19 22:25:01,099 - INFO - ✅ Données trouvées pour 75: (0.0, 0.0, 0.0, 0.0, 11.0, 5.0, 8.0, 14.0, 2.0, 12.0, 13.0, 11.0, 9.0, 0.0, 10.0, None)
+2025-02-19 22:25:01,171 - INFO - 🎯 Statut final : Échoué pour 75
+2025-02-19 22:25:01,173 - INFO - ✅ Données trouvées pour 76: (11.0, 9.5, 11.0, 13.0, 5.0, 5.0, 10.0, 9.0, 4.0, 6.0, 5.0, 3.0, 11.0, 0.0, 13.0, None)
+2025-02-19 22:25:01,413 - INFO - 🎯 Statut final : Échoué pour 76
+2025-02-19 22:25:01,416 - INFO - ✅ Données trouvées pour 77: (10.0, 16.0, 14.0, 10.0, 7.0, 5.0, 7.0, 9.0, 7.0, 8.0, 8.0, 3.0, 8.0, 12.0, 11.0, None)
+2025-02-19 22:25:01,571 - INFO - 🎯 Statut final : Échoué pour 77
+2025-02-19 22:25:01,573 - INFO - ✅ Données trouvées pour 78: (10.0, 11.0, 10.0, 11.0, 9.0, 7.0, 7.0, 9.0, 5.0, 10.0, 11.0, 6.0, 12.0, 0.0, 0.0, None)
+2025-02-19 22:25:01,719 - INFO - 🎯 Statut final : Échoué pour 78
+2025-02-19 22:25:01,721 - INFO - ✅ Données trouvées pour 79: (10.0, 9.75, 10.0, 8.0, 13.0, 2.0, 7.0, 9.0, 13.0, 8.0, 5.0, 4.0, 10.0, 14.0, 9.0, None)
+2025-02-19 22:25:01,795 - INFO - 🎯 Statut final : Second Tour pour 79
+2025-02-19 22:25:01,796 - INFO - ✅ Données trouvées pour 80: (11.0, 11.0, 11.0, 13.0, 11.0, 12.0, 18.0, 7.0, 10.0, 5.0, 7.0, 6.0, 8.0, 8.0, 0.0, None)
+2025-02-19 22:25:01,870 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 80
+2025-02-19 22:25:01,871 - INFO - ✅ Données trouvées pour 81: (10.0, 12.0, 13.0, 12.0, 5.0, 15.0, 6.0, 13.0, 11.0, 12.0, 12.0, 4.0, 8.0, 10.0, 11.0, None)
+2025-02-19 22:25:01,944 - INFO - 🎯 Statut final : Second Tour pour 81
+2025-02-19 22:25:01,945 - INFO - ✅ Données trouvées pour 82: (0.0, 0.0, 0.0, 0.0, 8.0, 1.0, 10.0, 11.0, 6.0, 8.0, 17.0, 4.0, 17.0, 9.0, 0.0, None)
+2025-02-19 22:25:02,019 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 82
+2025-02-19 22:25:02,020 - INFO - ✅ Données trouvées pour 83: (17.0, 15.0, 12.0, 10.0, 14.0, 1.0, 14.0, 10.0, 8.0, 5.0, 18.0, 12.0, 9.0, 0.0, 14.0, None)
+2025-02-19 22:25:02,103 - INFO - 🎯 Statut final : Second Tour pour 83
+2025-02-19 22:25:02,104 - INFO - ✅ Données trouvées pour 84: (12.0, 10.0, 10.0, 10.0, 8.0, 1.0, 9.0, 9.0, 5.0, 6.0, 6.0, 8.0, 10.0, 9.0, 10.0, None)
+2025-02-19 22:25:02,194 - INFO - 🎯 Statut final : Échoué pour 84
+2025-02-19 22:25:02,196 - INFO - ✅ Données trouvées pour 85: (10.0, 11.0, 12.0, 9.0, 11.0, 4.0, 7.0, 10.0, 3.0, 14.0, 5.0, 6.0, 9.0, 0.0, 11.0, None)
+2025-02-19 22:25:02,296 - INFO - 🎯 Statut final : Échoué pour 85
+2025-02-19 22:25:02,298 - INFO - ✅ Données trouvées pour 86: (10.0, 11.0, 12.0, 8.0, 6.0, 4.0, 13.0, 12.0, 5.0, 8.0, 7.0, 5.0, 15.0, 11.0, 10.0, None)
+2025-02-19 22:25:02,641 - INFO - 🎯 Statut final : Échoué pour 86
+2025-02-19 22:25:02,643 - INFO - ✅ Données trouvées pour 87: (9.54, 10.0, 12.0, 11.0, 8.0, 9.0, 7.0, 8.0, 8.0, 6.0, 13.0, 4.0, 11.0, 7.0, 10.0, None)
+2025-02-19 22:25:02,810 - INFO - 🎯 Statut final : Échoué pour 87
+2025-02-19 22:25:02,812 - INFO - ✅ Données trouvées pour 88: (12.0, 10.0, 10.0, 10.0, 8.0, 10.0, 8.0, 13.0, 4.0, 10.0, 6.0, 12.0, 11.0, 9.0, 10.0, None)
+2025-02-19 22:25:03,042 - INFO - 🎯 Statut final : Échoué pour 88
+2025-02-19 22:25:03,044 - INFO - ✅ Données trouvées pour 89: (10.0, 14.0, 10.0, 11.0, 5.0, 2.0, 7.0, 9.0, 5.0, 8.0, 16.0, 12.0, 12.0, 12.0, 10.0, None)
+2025-02-19 22:25:03,296 - INFO - 🎯 Statut final : Échoué pour 89
+2025-02-19 22:25:03,297 - INFO - ✅ Données trouvées pour 90: (10.0, 13.0, 11.0, 9.0, 13.0, 2.0, 8.0, 7.0, 12.0, 13.0, 10.0, 6.0, 11.0, 10.0, 12.0, None)
+2025-02-19 22:25:03,772 - INFO - 🎯 Statut final : Second Tour pour 90
+2025-02-19 22:25:03,787 - INFO - ✅ Données trouvées pour 91: (10.0, 9.85, 11.0, 10.0, 8.0, 8.0, 15.0, 8.0, 5.0, 7.0, 9.0, 9.0, 9.0, 15.0, 12.0, None)
+2025-02-19 22:25:04,081 - INFO - 🎯 Statut final : Échoué pour 91
+2025-02-19 22:25:04,083 - INFO - ✅ Données trouvées pour 92: (10.0, 11.0, 10.0, 10.0, 5.0, 10.0, 7.0, 9.0, 14.0, 9.0, 8.0, 8.0, 10.0, 9.0, 9.0, None)
+2025-02-19 22:25:04,255 - INFO - 🎯 Statut final : Second Tour pour 92
+2025-02-19 22:25:04,257 - INFO - ✅ Données trouvées pour 93: (11.0, 12.0, 14.0, 8.0, 6.0, 6.0, 5.0, 7.0, 2.0, 9.0, 19.0, 7.0, 15.0, 7.0, 9.0, None)
+2025-02-19 22:25:04,411 - INFO - 🎯 Statut final : Échoué pour 93
+2025-02-19 22:25:04,412 - INFO - ✅ Données trouvées pour 94: (9.75, 10.0, 10.0, 11.0, 15.0, 1.0, 6.0, 7.0, 7.0, 9.0, 13.0, 10.0, 17.0, 7.0, 9.0, None)
+2025-02-19 22:25:04,677 - INFO - 🎯 Statut final : Second Tour pour 94
+2025-02-19 22:25:04,680 - INFO - ✅ Données trouvées pour 95: (14.0, 10.0, 10.0, 13.0, 9.0, 0.0, 15.0, 8.0, 5.0, 3.0, 7.0, 8.0, 9.0, 7.0, 9.0, None)
+2025-02-19 22:25:04,829 - INFO - 🎯 Statut final : Échoué pour 95
+2025-02-19 22:25:04,831 - INFO - ✅ Données trouvées pour 96: (16.0, 10.0, 10.0, 12.0, 9.0, 15.0, 9.0, 9.0, 3.0, 4.0, 5.0, 13.0, 8.0, 7.0, 9.0, None)
+2025-02-19 22:25:04,983 - INFO - 🎯 Statut final : Échoué pour 96
+2025-02-19 22:25:04,984 - INFO - ✅ Données trouvées pour 97: (14.0, 10.0, 9.5, 9.0, 7.0, 5.0, 9.0, 9.0, 3.0, 5.0, 12.0, 8.0, 10.0, 7.0, 11.0, None)
+2025-02-19 22:25:05,175 - INFO - 🎯 Statut final : Échoué pour 97
+2025-02-19 22:25:05,177 - INFO - ✅ Données trouvées pour 98: (11.0, 12.0, 12.0, 12.0, 11.0, 14.0, 5.0, 7.0, 9.0, 8.0, 12.0, 11.0, 9.0, 11.0, 9.0, None)
+2025-02-19 22:25:05,292 - INFO - 🎯 Statut final : Second Tour pour 98
+2025-02-19 22:25:05,294 - INFO - ✅ Données trouvées pour 99: (12.0, 10.0, 13.0, 12.0, 14.0, 7.0, 5.0, 8.0, 9.0, 3.0, 7.0, 12.0, 15.0, 0.0, 0.0, None)
+2025-02-19 22:25:05,399 - INFO - 🎯 Statut final : Échoué pour 99
+2025-02-19 22:25:05,401 - INFO - ✅ Données trouvées pour 100: (11.0, 10.0, 10.0, 9.0, 10.0, 4.0, 17.0, 11.0, 7.0, 6.0, 9.0, 5.0, 11.0, 9.0, 0.0, None)
+2025-02-19 22:25:05,623 - INFO - 🎯 Statut final : Échoué pour 100
+2025-02-19 22:25:05,625 - INFO - ✅ Données trouvées pour 101: (11.0, 10.0, 13.0, 10.0, 10.0, 15.0, 7.0, 7.0, 19.0, 10.0, 16.0, 5.0, 14.0, 9.0, 10.0, None)
+2025-02-19 22:25:05,900 - INFO - 🎯 Statut final : Admis pour 101
+2025-02-19 22:25:05,903 - INFO - ✅ Données trouvées pour 102: (0.0, 0.0, 0.0, 0.0, 6.0, 8.0, 14.0, 10.0, 3.0, 9.0, 6.0, 8.0, 10.0, 7.0, 9.0, None)
+2025-02-19 22:25:06,173 - INFO - 🎯 Statut final : Échoué pour 102
+2025-02-19 22:25:06,176 - INFO - ✅ Données trouvées pour 103: (0.0, 0.0, 0.0, 0.0, 10.0, 5.0, 12.0, 9.0, 6.0, 7.0, 13.0, 3.0, 17.0, 11.0, 10.0, None)
+2025-02-19 22:25:06,393 - INFO - 🎯 Statut final : Échoué pour 103
+2025-02-19 22:25:06,397 - INFO - ✅ Données trouvées pour 104: (9.75, 10.0, 10.0, 8.0, 9.0, 6.0, 12.0, 9.0, 5.0, 11.0, 13.0, 11.0, 12.0, 8.0, 10.0, None)
+2025-02-19 22:25:06,530 - INFO - 🎯 Statut final : Second Tour pour 104
+2025-02-19 22:25:06,547 - INFO - ✅ Données trouvées pour 105: (0.0, 0.0, 0.0, 0.0, 5.0, 5.0, 9.0, 9.0, 9.0, 7.0, 16.0, 15.0, 9.0, 8.0, 11.0, None)
+2025-02-19 22:25:06,628 - INFO - 🎯 Statut final : Second Tour pour 105
+2025-02-19 22:25:06,629 - INFO - ✅ Données trouvées pour 106: (15.0, 14.0, 11.0, 8.0, 7.0, 0.0, 14.0, 13.0, 12.0, 5.0, 10.0, 8.0, 8.0, 0.0, 9.0, None)
+2025-02-19 22:25:06,712 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 106
+2025-02-19 22:25:06,713 - INFO - ✅ Données trouvées pour 107: (13.0, 12.0, 11.0, 13.0, 5.0, 1.0, 11.0, 12.0, 4.0, 6.0, 15.0, 8.0, 13.0, 0.0, 10.0, None)
+2025-02-19 22:25:06,787 - INFO - 🎯 Statut final : Échoué pour 107
+2025-02-19 22:25:06,788 - INFO - ✅ Données trouvées pour 108: (10.0, 11.0, 12.0, 12.0, 12.0, 2.0, 5.0, 9.0, 2.0, 13.0, 6.0, 6.0, 10.0, 0.0, 12.0, None)
+2025-02-19 22:25:06,862 - INFO - 🎯 Statut final : Échoué pour 108
+2025-02-19 22:25:06,863 - INFO - ✅ Données trouvées pour 109: (12.0, 10.0, 11.0, 9.0, 16.0, 0.0, 11.0, 8.0, 10.0, 9.0, 6.0, 7.0, 10.0, 7.0, 9.0, None)
+2025-02-19 22:25:07,037 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 109
+2025-02-19 22:25:07,040 - INFO - ✅ Données trouvées pour 110: (12.0, 10.0, 10.0, 11.0, 5.0, 16.0, 10.0, 12.0, 2.0, 4.0, 8.0, 8.0, 9.0, 10.0, 10.0, None)
+2025-02-19 22:25:07,128 - INFO - 🎯 Statut final : Échoué pour 110
+2025-02-19 22:25:07,129 - INFO - ✅ Données trouvées pour 111: (10.0, 13.0, 12.0, 9.0, 6.0, 0.0, 13.0, 9.0, 14.0, 12.0, 6.0, 3.0, 10.0, 16.0, 10.0, None)
+2025-02-19 22:25:07,211 - INFO - 🎯 Statut final : Second Tour pour 111
+2025-02-19 22:25:07,213 - INFO - ✅ Données trouvées pour 112: (11.0, 13.0, 12.0, 11.0, 8.0, 15.0, 10.0, 7.0, 6.0, 12.0, 7.0, 8.0, 10.0, 7.0, 9.0, None)
+2025-02-19 22:25:07,278 - INFO - 🎯 Statut final : Échoué pour 112
+2025-02-19 22:25:07,279 - INFO - ✅ Données trouvées pour 113: (13.0, 11.0, 10.0, 13.0, 6.0, 4.0, 9.0, 7.0, 12.0, 5.0, 13.0, 6.0, 12.0, 14.0, 10.0, None)
+2025-02-19 22:25:07,352 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 113
+2025-02-19 22:25:07,353 - INFO - ✅ Données trouvées pour 114: (10.0, 11.0, 11.0, 9.0, 8.0, 14.0, 9.0, 7.0, 10.0, 7.0, 5.0, 5.0, 10.0, 8.0, 13.0, None)
+2025-02-19 22:25:07,435 - INFO - 🎯 Statut final : Échoué pour 114
+2025-02-19 22:25:07,436 - INFO - ✅ Données trouvées pour 115: (16.0, 13.0, 12.0, 9.0, 10.0, 2.0, 5.0, 14.0, 5.0, 6.0, 8.0, 5.0, 10.0, 11.0, 9.0, None)
+2025-02-19 22:25:07,521 - INFO - 🎯 Statut final : Échoué pour 115
+2025-02-19 22:25:07,524 - INFO - ✅ Données trouvées pour 116: (9.75, 10.0, 13.0, 10.0, 6.0, 13.0, 15.0, 13.0, 2.0, 4.0, 16.0, 10.0, 8.0, 7.0, 10.0, None)
+2025-02-19 22:25:07,602 - INFO - 🎯 Statut final : Échoué pour 116
+2025-02-19 22:25:07,602 - INFO - ✅ Données trouvées pour 117: (10.0, 12.0, 14.0, 13.0, 10.0, 3.0, 9.0, 8.0, 9.0, 15.0, 6.0, 6.0, 9.0, 10.0, 12.0, None)
+2025-02-19 22:25:07,726 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 117
+2025-02-19 22:25:07,727 - INFO - ✅ Données trouvées pour 118: (10.0, 13.0, 11.0, 8.0, 14.0, 0.0, 5.0, 9.0, 2.0, 11.0, 13.0, 6.0, 10.0, 9.0, 11.0, None)
+2025-02-19 22:25:07,909 - INFO - 🎯 Statut final : Échoué pour 118
+2025-02-19 22:25:07,912 - INFO - ✅ Données trouvées pour 119: (10.0, 10.0, 10.0, 9.0, 11.0, 14.0, 6.0, 10.0, 7.0, 7.0, 13.0, 13.0, 10.0, 7.0, 0.0, None)
+2025-02-19 22:25:08,009 - INFO - 🎯 Statut final : Second Tour pour 119
+2025-02-19 22:25:08,010 - INFO - ✅ Données trouvées pour 120: (0.0, 0.0, 0.0, 0.0, 9.0, 9.0, 9.0, 8.0, 7.0, 8.0, 19.0, 8.0, 10.0, 15.0, 0.0, None)
+2025-02-19 22:25:08,172 - INFO - 🎯 Statut final : Second Tour pour 120
+2025-02-19 22:25:08,175 - INFO - ✅ Données trouvées pour 121: (13.0, 11.0, 13.0, 8.0, 5.0, 0.0, 5.0, 7.0, 11.0, 9.0, 14.0, 6.0, 8.0, 7.0, 0.0, None)
+2025-02-19 22:25:08,275 - INFO - 🎯 Statut final : Échoué pour 121
+2025-02-19 22:25:08,276 - INFO - ✅ Données trouvées pour 122: (14.0, 14.0, 10.0, 10.0, 10.0, 0.0, 8.0, 7.0, 10.0, 11.0, 5.0, 3.0, 14.0, 0.0, 13.0, None)
+2025-02-19 22:25:08,348 - INFO - 🎯 Statut final : Échoué pour 122
+2025-02-19 22:25:08,350 - INFO - ✅ Données trouvées pour 123: (11.0, 13.0, 10.0, 8.0, 15.0, 7.0, 7.0, 7.0, 13.0, 6.0, 5.0, 9.0, 15.0, 0.0, 12.0, None)
+2025-02-19 22:25:08,416 - INFO - 🎯 Statut final : Second Tour pour 123
+2025-02-19 22:25:08,418 - INFO - ✅ Données trouvées pour 124: (13.0, 11.0, 9.5, 9.0, 12.0, 2.0, 12.0, 9.0, 8.0, 15.0, 5.0, 4.0, 12.0, 7.0, 10.0, None)
+2025-02-19 22:25:08,566 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 124
+2025-02-19 22:25:08,569 - INFO - ✅ Données trouvées pour 125: (11.0, 13.0, 10.0, 10.0, 6.0, 1.0, 7.0, 8.0, 9.0, 5.0, 11.0, 6.0, 17.0, 14.0, 10.0, None)
+2025-02-19 22:25:08,722 - INFO - 🎯 Statut final : Échoué pour 125
+2025-02-19 22:25:08,724 - INFO - ✅ Données trouvées pour 126: (12.0, 11.0, 11.0, 10.0, 7.0, 0.0, 6.0, 11.0, 13.0, 6.0, 8.0, 10.0, 16.0, 11.0, 11.0, None)
+2025-02-19 22:25:08,789 - INFO - 🎯 Statut final : Second Tour pour 126
+2025-02-19 22:25:08,791 - INFO - ✅ Données trouvées pour 127: (13.0, 11.0, 9.5, 9.0, 15.0, 8.0, 10.0, 11.0, 12.0, 15.0, 11.0, 5.0, 8.0, 8.0, 9.0, None)
+2025-02-19 22:25:08,864 - INFO - 🎯 Statut final : Admis pour 127
+2025-02-19 22:25:08,865 - INFO - ✅ Données trouvées pour 128: (12.0, 11.0, 10.0, 8.0, 10.0, 12.0, 10.0, 9.0, 19.0, 5.0, 5.0, 6.0, 16.0, 9.0, 9.0, None)
+2025-02-19 22:25:08,947 - INFO - 🎯 Statut final : Admis pour 128
+2025-02-19 22:25:08,949 - INFO - ✅ Données trouvées pour 129: (11.0, 11.0, 11.0, 12.0, 9.0, 5.0, 8.0, 10.0, 5.0, 11.0, 8.0, 6.0, 15.0, 11.0, 9.0, None)
+2025-02-19 22:25:09,038 - INFO - 🎯 Statut final : Échoué pour 129
+2025-02-19 22:25:09,040 - INFO - ✅ Données trouvées pour 130: (10.0, 16.0, 10.0, 10.0, 6.0, 1.0, 14.0, 9.0, 6.0, 4.0, 5.0, 6.0, 17.0, 10.0, 11.0, None)
+2025-02-19 22:25:09,168 - INFO - 🎯 Statut final : Échoué pour 130
+2025-02-19 22:25:09,171 - INFO - ✅ Données trouvées pour 131: (0.0, 0.0, 0.0, 0.0, 10.0, 4.0, 8.0, 7.0, 2.0, 4.0, 14.0, 4.0, 10.0, 8.0, 12.0, None)
+2025-02-19 22:25:09,375 - INFO - 🎯 Statut final : Échoué pour 131
+2025-02-19 22:25:09,376 - INFO - ✅ Données trouvées pour 132: (0.0, 0.0, 0.0, 0.0, 11.0, 0.0, 14.0, 10.0, 10.0, 8.0, 5.0, 6.0, 14.0, 8.0, 13.0, None)
+2025-02-19 22:25:09,471 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 132
+2025-02-19 22:25:09,472 - INFO - ✅ Données trouvées pour 133: (14.0, 10.0, 11.0, 11.0, 8.0, 4.0, 15.0, 11.0, 8.0, 3.0, 13.0, 10.0, 12.0, 8.0, 12.0, None)
+2025-02-19 22:25:09,612 - INFO - 🎯 Statut final : Second Tour pour 133
+2025-02-19 22:25:09,614 - INFO - ✅ Données trouvées pour 134: (0.0, 0.0, 0.0, 0.0, 5.0, 15.0, 7.0, 9.0, 6.0, 8.0, 17.0, 6.0, 12.0, 9.0, 10.0, None)
+2025-02-19 22:25:09,763 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 134
+2025-02-19 22:25:09,766 - INFO - ✅ Données trouvées pour 135: (10.0, 12.0, 13.0, 10.0, 7.0, 7.0, 6.0, 12.0, 10.0, 3.0, 11.0, 7.0, 9.0, 11.0, 11.0, None)
+2025-02-19 22:25:09,854 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 135
+2025-02-19 22:25:09,856 - INFO - ✅ Données trouvées pour 136: (13.0, 10.0, 14.0, 10.0, 14.0, 6.0, 16.0, 7.0, 8.0, 12.0, 7.0, 7.0, 12.0, 11.0, 13.0, None)
+2025-02-19 22:25:09,944 - INFO - 🎯 Statut final : Second Tour pour 136
+2025-02-19 22:25:09,946 - INFO - ✅ Données trouvées pour 137: (12.0, 11.0, 12.0, 10.0, 8.0, 4.0, 16.0, 13.0, 8.0, 3.0, 13.0, 8.0, 13.0, 0.0, 11.0, None)
+2025-02-19 22:25:10,035 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 137
+2025-02-19 22:25:10,037 - INFO - ✅ Données trouvées pour 138: (0.0, 0.0, 0.0, 0.0, 15.0, 3.0, 7.0, 9.0, 6.0, 10.0, 6.0, 8.0, 9.0, 9.0, 9.0, None)
+2025-02-19 22:25:10,110 - INFO - 🎯 Statut final : Échoué pour 138
+2025-02-19 22:25:10,111 - INFO - ✅ Données trouvées pour 139: (13.0, 10.0, 10.0, 10.0, 6.0, 10.0, 13.0, 7.0, 6.0, 3.0, 19.0, 13.0, 11.0, 8.0, 9.0, None)
+2025-02-19 22:25:10,269 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 139
+2025-02-19 22:25:10,271 - INFO - ✅ Données trouvées pour 140: (14.0, 14.0, 10.0, 9.0, 15.0, 8.0, 7.0, 7.0, 7.0, 12.0, 5.0, 5.0, 10.0, 7.0, 10.0, None)
+2025-02-19 22:25:10,368 - INFO - 🎯 Statut final : Échoué pour 140
+2025-02-19 22:25:10,369 - INFO - ✅ Données trouvées pour 141: (11.0, 10.0, 12.0, 10.0, 6.0, 1.0, 15.0, 8.0, 5.0, 7.0, 5.0, 4.0, 15.0, 8.0, 10.0, None)
+2025-02-19 22:25:10,468 - INFO - 🎯 Statut final : Échoué pour 141
+2025-02-19 22:25:10,471 - INFO - ✅ Données trouvées pour 142: (10.0, 10.0, 11.0, 11.0, 7.0, 5.0, 8.0, 14.0, 10.0, 6.0, 7.0, 9.0, 8.0, 11.0, 0.0, None)
+2025-02-19 22:25:10,575 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 142
+2025-02-19 22:25:10,577 - INFO - ✅ Données trouvées pour 143: (10.0, 14.0, 12.0, 9.75, 7.0, 15.0, 9.0, 11.0, 10.0, 5.0, 8.0, 5.0, 12.0, 14.0, 0.0, None)
+2025-02-19 22:25:10,759 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 143
+2025-02-19 22:25:10,762 - INFO - ✅ Données trouvées pour 144: (10.0, 10.0, 12.0, 9.0, 13.0, 7.0, 7.0, 8.0, 10.0, 7.0, 7.0, 7.0, 13.0, 7.0, 0.0, None)
+2025-02-19 22:25:10,842 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 144
+2025-02-19 22:25:10,843 - INFO - ✅ Données trouvées pour 145: (10.0, 10.0, 13.0, 8.0, 16.0, 15.0, 17.0, 9.0, 4.0, 4.0, 8.0, 13.0, 13.0, 14.0, 0.0, None)
+2025-02-19 22:25:10,935 - INFO - 🎯 Statut final : Second Tour pour 145
+2025-02-19 22:25:10,937 - INFO - ✅ Données trouvées pour 146: (11.0, 13.0, 10.0, 9.85, 10.0, 0.0, 13.0, 11.0, 2.0, 10.0, 5.0, 6.0, 13.0, 9.0, 0.0, None)
+2025-02-19 22:25:11,025 - INFO - 🎯 Statut final : Échoué pour 146
+2025-02-19 22:25:11,025 - INFO - ✅ Données trouvées pour 147: (10.0, 13.0, 10.0, 9.0, 8.0, 11.0, 7.0, 9.0, 17.0, 5.0, 13.0, 3.0, 10.0, 7.0, 0.0, None)
+2025-02-19 22:25:11,098 - INFO - 🎯 Statut final : Second Tour pour 147
+2025-02-19 22:25:11,100 - INFO - ✅ Données trouvées pour 148: (10.0, 12.0, 10.0, 11.0, 9.0, 8.0, 8.0, 7.0, 12.0, 8.0, 5.0, 7.0, 9.0, 8.0, 11.0, None)
+2025-02-19 22:25:11,173 - INFO - 🎯 Statut final : Repêchable au 2nd tour pour 148
+2025-02-19 22:25:11,175 - INFO - ✅ Données trouvées pour 149: (10.0, 10.0, 10.0, 11.0, 15.0, 4.0, 5.0, 9.0, 6.0, 8.0, 5.0, 9.0, 15.0, 8.0, 9.0, None)
+2025-02-19 22:25:11,293 - INFO - 🎯 Statut final : Échoué pour 149
+2025-02-19 22:25:11,295 - INFO - ✅ Données trouvées pour 150: (0.0, 0.0, 0.0, 0.0, 12.0, 10.0, 6.0, 15.0, 3.0, 3.0, 5.0, 10.0, 9.0, 10.0, 10.0, None)
+2025-02-19 22:25:11,404 - INFO - 🎯 Statut final : Échoué pour 150
+2025-02-19 22:25:11,406 - INFO - ✅ Données trouvées pour 151: (0.0, 0.0, 0.0, 0.0, 14.0, 9.0, 9.0, 8.0, 4.0, 5.0, 7.0, 6.0, 9.0, 0.0, 10.0, None)
+2025-02-19 22:25:11,497 - INFO - 🎯 Statut final : Échoué pour 151
+2025-02-19 22:25:11,498 - INFO - ✅ Importation des notes terminée avec succès.
+2025-02-19 22:25:11,500 - INFO - 📌 Début de l'importation du livret scolaire...
+2025-02-19 22:25:11,629 - INFO - ✅ Importation des livrets scolaires terminée avec succès.
+2025-02-19 22:25:11,630 - INFO - ✅ Importation terminée.
+2025-02-19 22:25:13,454 - INFO - 🖥️ Interface graphique chargée.

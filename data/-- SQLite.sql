@@ -30,8 +30,11 @@ SELECT * FROM candidats;
 SELECT COUNT(*) FROM notes;
 SELECT * FROM livret_scolaire;
 
-SELECT candidat_id, total_points, statut FROM candidats c JOIN deliberation d ON c.id = d.candidat_id WHERE d.total_points >= 180;
+SELECT candidat_id, total_points, statut FROM candidats c JOIN deliberation d ON c.id = d.candidat_id WHERE d.total_points >= 171;
 SELECT * FROM deliberation ;
 
-DELETE FROM notes;
-DELETE FROM livret_scolaire;
+
+SELECT * FROM candidats WHERE num_table = 100;
+SELECT * FROM notes WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);
+SELECT * FROM livret_scolaire WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);
+SELECT * FROM deliberation WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);

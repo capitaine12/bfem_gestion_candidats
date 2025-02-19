@@ -1,7 +1,0 @@
-
-dir logs\
-Répertoire :bfem_gestion_candidats\logs
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a----         2/19/2025   2:49 AM              0 app.log

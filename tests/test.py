@@ -10,12 +10,12 @@ from backend.function.calculenotes import calculer_statut_candidat
 # Vérifier si des données sont bien récupérées depuis la base de données
 #print("recuperation", get_all_candidats())  
 from backend.function.calculenotes import recalculer_tous_les_statuts
-#recalculer_tous_les_statuts()
+recalculer_tous_les_statuts()
 num_table = 101
-""" print(f"📌 Test de la délibération pour le candidat {num_table}")
+print(f"📌 Test de la délibération pour le candidat {num_table}")
 statut = calculer_statut_candidat(num_table)
-print(f"🎯 Statut final : {statut}") """
-calculer_statut_candidat(num_table)
+print(f"🎯 Statut final : {statut}")
+#calculer_statut_candidat(num_table)
 
 
 
