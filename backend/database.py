@@ -1,10 +1,12 @@
 import sqlite3
 import pandas as pd
 from datetime import datetime
-import sys, os
 
+import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from backend.db_connection import get_db_connection
+
+from backend.function.calculenotes import calculer_statut_candidat
+from backend.function.db_connection import get_db_connection
 
 # Fonction pour se connecter à la base de données
 def get_db_connection():
@@ -105,7 +107,7 @@ def create_tables():
 # Fonction pour importer des candidats depuis un fichier Excel
 
 #def import_candidats_from_excel(excel_file):
-def import_candidats_from_excel(excel_file="./backend/bdbfem.xlsx"):
+def import_candidats_from_excel(excel_file="data/bdbfem.xlsx"):
     print(" Début de l'importation des candidats depuis Excel...")
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -137,10 +139,10 @@ def import_candidats_from_excel(excel_file="./backend/bdbfem.xlsx"):
                                      row["sexe"], row["nationalite"], row["epreuve_facultative"], row["etat_sportif"]))
                 
                 
-                print(f"Candidat inséré : {row['num_table']} - {row['prenom']} {row['nom']}")
+                print(f"✅ Candidat inséré : {row['num_table']} - {row['prenom']} {row['nom']}")
                 
             except sqlite3.IntegrityError:
-                print(f"Le candidat avec num_table {row['num_table']} existe déjà.")
+                print(f"❌ Le candidat avec num_table {row['num_table']} existe déjà.")
 
         # Sauvegarder et fermer la connexion
         conn.commit()
@@ -266,8 +268,10 @@ def get_all_notes():
 #?==================================================================
 def add_notes(num_table, notes):
     """ Ajoute les notes d'un candidat dans la base de données """
+    print(f"📌 Ajout des notes pour {num_table}")
     conn = get_db_connection()
     cursor = conn.cursor()
+
 
     cursor.execute("""
         INSERT INTO notes (candidat_id, moy_6e, moy_5e, moy_4e, moy_3e, note_eps, 
@@ -279,14 +283,18 @@ def add_notes(num_table, notes):
     """, (num_table, notes["moy_6e"], notes["moy_5e"], notes["moy_4e"], notes["moy_3e"], notes["note_eps"], 
           notes["note_cf"], notes["note_ort"], notes["note_tsq"], notes["note_svt"], notes["note_ang1"], 
           notes["note_math"], notes["note_hg"], notes["note_ic"], notes["note_pc_lv2"], notes["note_ang2"], notes["note_ep_fac"]))
-
+    
+    
     conn.commit()
+    print(f"✅ Notes mises à jour pour {num_table}, recalcul du statut...")
+    calculer_statut_candidat(num_table)
     conn.close()
 
 
 #?==================================================================
 def update_notes(num_table, notes):
     """ Met à jour les notes d'un candidat existant """
+    print(f"📌 Mise à jour des notes pour {num_table}")
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -300,7 +308,10 @@ def update_notes(num_table, notes):
           notes["note_cf"], notes["note_ort"], notes["note_tsq"], notes["note_svt"], notes["note_ang1"], 
           notes["note_math"], notes["note_hg"], notes["note_ic"], notes["note_pc_lv2"], notes["note_ang2"], notes["note_ep_fac"], num_table))
 
+    
     conn.commit()
+    print(f"✅ Notes mises à jour pour {num_table}, recalcul du statut...")
+    calculer_statut_candidat(num_table)
     conn.close()
 
 
@@ -311,7 +322,4 @@ create_tables()
 
 import_candidats_from_excel()
 
-if __name__ == "__main__":
-    from backend.import_notes import import_notes_from_excel
-    import_notes_from_excel("E:/labo/code/bfem_gestion_candidats/backend/bdbfem.xlsx")
 
