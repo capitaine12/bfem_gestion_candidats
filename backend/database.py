@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, logging
 import pandas as pd
 from datetime import datetime
 
@@ -7,6 +7,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from backend.function.calculenotes import calculer_statut_candidat
 from backend.function.db_connection import get_db_connection
+
+#Configuration du logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Fonction pour se connecter à la base de données
 def get_db_connection():
@@ -268,27 +271,27 @@ def get_all_notes():
 #?==================================================================
 def add_notes(num_table, notes):
     """ Ajoute les notes d'un candidat dans la base de données """
-    print(f"📌 Ajout des notes pour {num_table}")
+    logging.info(f"📌 Ajout des notes pour le candidat {num_table}")
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    try:
+        cursor.execute("""
+            INSERT INTO notes (candidat_id, moy_6e, moy_5e, moy_4e, moy_3e, note_eps, 
+                               note_cf, note_ort, note_tsq, note_svt, note_ang1, note_math, 
+                               note_hg, note_ic, note_pc_lv2, note_ang2, note_ep_fac) 
+            VALUES ((SELECT id FROM candidats WHERE num_table = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (num_table, notes["moy_6e"], notes["moy_5e"], notes["moy_4e"], notes["moy_3e"], notes["note_eps"], 
+              notes["note_cf"], notes["note_ort"], notes["note_tsq"], notes["note_svt"], notes["note_ang1"], 
+              notes["note_math"], notes["note_hg"], notes["note_ic"], notes["note_pc_lv2"], notes["note_ang2"], notes["note_ep_fac"]))
 
-    cursor.execute("""
-        INSERT INTO notes (candidat_id, moy_6e, moy_5e, moy_4e, moy_3e, note_eps, 
-                           note_cf, note_ort, note_tsq, note_svt, note_ang1, note_math, 
-                           note_hg, note_ic, note_pc_lv2, note_ang2, note_ep_fac) 
-        VALUES (
-            (SELECT id FROM candidats WHERE num_table = ?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-        )
-    """, (num_table, notes["moy_6e"], notes["moy_5e"], notes["moy_4e"], notes["moy_3e"], notes["note_eps"], 
-          notes["note_cf"], notes["note_ort"], notes["note_tsq"], notes["note_svt"], notes["note_ang1"], 
-          notes["note_math"], notes["note_hg"], notes["note_ic"], notes["note_pc_lv2"], notes["note_ang2"], notes["note_ep_fac"]))
-    
-    
-    conn.commit()
-    print(f"✅ Notes mises à jour pour {num_table}, recalcul du statut...")
-    calculer_statut_candidat(num_table)
-    conn.close()
+        conn.commit()
+        logging.info(f"✅ Notes ajoutées pour {num_table}, recalcul du statut...")
+        calculer_statut_candidat(num_table)
+    except Exception as e:
+        logging.error(f"❌ Erreur lors de l'ajout des notes pour {num_table} : {e}")
+    finally:
+        conn.close()
 
 
 #?==================================================================

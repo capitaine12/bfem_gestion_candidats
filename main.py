@@ -1,48 +1,71 @@
+import logging
 import os
 import sys
 from PyQt5.QtWidgets import QApplication
 from frontend.views import MainWindow
 
-# 📌 Ajouter le dossier parent au chemin des modules pour éviter les erreurs d'importation
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# 📌 Fonction pour charger le fichier de styles QSS
+# Configuration du logging
+log_file = "logs/app.log"
+logging.basicConfig(
+    level=logging.INFO,  # Niveau INFO
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(log_file, mode="w"),  # Mode "w" écrase le fichier à chaque lancement
+        logging.StreamHandler()  # Affiche aussi les logs dans la console
+    ]
+)
+
+logger = logging.getLogger(__name__)  # Création du logger
+
+
+# Fonction pour charger le fichier QSS
 def load_stylesheet(app):
-    """Charge et applique le fichier de styles CSS pour l'application."""
-    try:
-        with open("frontend/styles.qss", "r") as f:
-            app.setStyleSheet(f.read())
-    except FileNotFoundError:
-        print("⚠️ Fichier de styles 'frontend/styles.qss' introuvable.")
+    with open("frontend/styles.qss", "r") as f:
+        app.setStyleSheet(f.read())
 
-# 📌 Fonction principale de l'application
-def main():
-    """Point d'entrée de l'application PyQt5."""
+if __name__ == "__main__":
+    logging.info("🚀 Démarrage de l'application")
+
     app = QApplication(sys.argv)
+    
+    #from backend.function.import_notes import import_notes_from_excel, import_livret_scolaire_from_excel
 
-    # 📌 Importation des modules nécessaires pour le traitement des données
-    from backend.function.import_notes import import_notes_from_excel, import_livret_scolaire_from_excel
-    from backend.function.calculenotes import recalculer_tous_les_statuts
-
-    # 📌 Importation des candidats et de leurs données depuis le fichier Excel
-    print("📌 Importation des notes et des livrets scolaires...")
+    """ logging.info("📌 Importation des notes et livrets scolaires depuis Excel...")
     import_notes_from_excel("data/bdbfem.xlsx")
     import_livret_scolaire_from_excel("data/bdbfem.xlsx")
-    print("✅ Importation terminée.")
+    logging.info("✅ Importation terminée.") """
 
-    # 📌 Recalcul automatique des statuts après importation
-    print("📌 Début du calcul automatique des délibérations...")
-    recalculer_tous_les_statuts()
-    print("✅ Délibérations mises à jour avec succès !")
+    # Charger le fichier de styles
+    #load_stylesheet(app)
 
-    # 📌 Charger le fichier de styles pour l'interface
-    load_stylesheet(app)
+    """ window = MainWindow()
+    window.show() """
 
-    # 📌 Démarrer l'application avec l'interface principale
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    #logging.info("🖥️ Interface graphique chargée.")
+    #sys.exit(app.exec_())
+print(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+logging.info("✅ Avant import des notes")
+from backend.function.import_notes import import_notes_from_excel, import_livret_scolaire_from_excel
+logging.info("✅ Après import des notes")
 
-# 📌 Exécuter la fonction principale si ce fichier est lancé directement
-if __name__ == "__main__":
-    main()
+logging.info("✅ Avant importation des notes")
+import_notes_from_excel("data/bdbfem.xlsx")
+logging.info("✅ Après importation des notes")
+
+logging.info("✅ Avant importation du livret scolaire")
+import_livret_scolaire_from_excel("data/bdbfem.xlsx")
+logging.info("✅ Après importation du livret scolaire")
+
+logging.info("✅ Avant lancement de l'interface graphique")
+from frontend.views import MainWindow
+logging.info("✅ Après lancement de l'interface graphique")
+
+load_stylesheet(app)
+
+window = MainWindow()
+window.show()
+logging.info("✅ Interface graphique démarrée")
+
+sys.exit(app.exec_())

@@ -32,3 +32,6 @@ SELECT * FROM livret_scolaire;
 
 SELECT candidat_id, total_points, statut FROM candidats c JOIN deliberation d ON c.id = d.candidat_id WHERE d.total_points >= 180;
 SELECT * FROM deliberation ;
+
+DELETE FROM notes;
+DELETE FROM livret_scolaire;
