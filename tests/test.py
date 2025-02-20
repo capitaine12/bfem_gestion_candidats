@@ -19,11 +19,12 @@ statut = calculer_statut_candidat(num_table)
 print(f"🎯 Statut final : {statut}") """
 #calculer_statut_candidat(num_table)
 
-from backend.database import get_candidats_avec_statut
+
+""" from backend.database import get_candidats_avec_statut
 
 candidats = get_candidats_avec_statut()
 for c in candidats:
-    print(c)  # Vérifie si les données s'affichent bien en console
+    print(c) """  # Vérifie si les données s'affichent bien en console
 
 
 

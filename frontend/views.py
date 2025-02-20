@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
     )
 
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtGui import QIcon
 import os,sys
 
@@ -322,10 +322,42 @@ class DeliberationPage(QWidget):
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
 
-        #menu déroulant pour filtrer les résultats
+
+         # Conteneur pour les boutons
+        button_layout = QVBoxLayout()
+
+        # Création des boutons d'impression
+        self.btn_print_candidats = QPushButton("📄 Imprimer Liste des Candidats")
+        self.btn_print_anonymat = QPushButton("🔒 Imprimer Liste Anonyme")
+        self.btn_print_resultats = QPushButton("🏆 Imprimer Résultats")
+        self.btn_print_pv = QPushButton("📜 Imprimer PV de Délibération")
+        self.btn_print_releve_1 = QPushButton("📊 Imprimer Relevé Notes - 1er Tour")
+        self.btn_print_releve_2 = QPushButton("📊 Imprimer Relevé Notes - 2nd Tour")
+
+
+         # Ajout des boutons à la mise en page
+        button_layout.addWidget(self.btn_print_candidats)
+        button_layout.addWidget(self.btn_print_anonymat)
+        button_layout.addWidget(self.btn_print_resultats)
+        button_layout.addWidget(self.btn_print_pv)
+        button_layout.addWidget(self.btn_print_releve_1)
+        button_layout.addWidget(self.btn_print_releve_2)
+
+        layout.addLayout(button_layout)
+        self.setLayout(layout)
+
+        # Connexion des boutons aux fonctions (à implémenter plus tard)
+        self.btn_print_candidats.clicked.connect(self.print_candidats)
+        self.btn_print_anonymat.clicked.connect(self.print_anonymat)
+        self.btn_print_resultats.clicked.connect(self.print_resultats)
+        self.btn_print_pv.clicked.connect(self.print_pv)
+        self.btn_print_releve_1.clicked.connect(self.print_releve_1)
+        self.btn_print_releve_2.clicked.connect(self.print_releve_2)
+
+        # Menu déroulant pour filtrer les résultats
         self.filtre_statut = QComboBox()
         self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour", 
-                                    "Repêchable au 2nd tour", "Échoué"])
+                                      "Repêchable au 2nd tour", "Échoué"])
         self.filtre_statut.currentTextChanged.connect(self.filtrer_par_statut)
         layout.addWidget(self.filtre_statut)
         self.filtre_statut.setStyleSheet("padding: 5px; border: 1px solid rgb(255, 102, 0); margin-bottom: 5px; font-size: 15px ")
@@ -341,8 +373,7 @@ class DeliberationPage(QWidget):
 
         layout.addWidget(self.table)
         self.setLayout(layout)
-        
-        
+
         # Charger les résultats
         self.load_deliberation()
 
@@ -353,7 +384,22 @@ class DeliberationPage(QWidget):
         self.table.setRowCount(len(resultats))
         for row_idx, candidat in enumerate(resultats):
             for col_idx, data in enumerate(candidat):
-                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(data)))
+                item = QTableWidgetItem(str(data))
+                # Appliquer le style de fond au statut
+                if col_idx == 7:  # Colonne du statut
+                    statut = str(data)
+                    if statut == "Admis":
+                        item.setBackground(QColor(0, 255, 0))  # Vert
+                    elif statut == "Second Tour":
+                        item.setBackground(QColor(255, 255, 0))  # Jaune
+                    elif statut == "Repêchable au 1er tour":
+                        item.setBackground(QColor(0, 0, 255))  # Bleu
+                    elif statut == "Repêchable au 2nd tour":
+                        item.setBackground(QColor(255, 165, 0))  # Orange
+                    elif statut == "Échoué":
+                        item.setBackground(QColor(255, 0, 0))  # Rouge
+
+                self.table.setItem(row_idx, col_idx, item)
 
     def refresh_deliberation(self):
         """ Rafraîchit l'affichage après l'importation des notes """
@@ -370,11 +416,23 @@ class DeliberationPage(QWidget):
         
         for row_idx, candidat in enumerate(resultats):
             for col_idx, data in enumerate(candidat):
-                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(data)))
-
-
-
-
+                item = QTableWidgetItem(str(data))
+                # Appliquer le style de fond au statut
+                if col_idx == 7:  # Colonne du statut
+                    statut = str(data)
+                    if statut == "Admis":
+                        item.setBackground(QColor(0, 255, 0))  # Vert
+                    elif statut == "Second Tour":
+                        item.setBackground(QColor(255, 255, 0))  # Jaune
+                    elif statut == "Repêchable au 1er tour":
+                        item.setBackground(QColor(0, 0, 255))  # Bleu
+                    elif statut == "Repêchable au 2nd tour":
+                        item.setBackground(QColor(255, 165, 0))  # Orange
+                    elif statut == "Échoué":
+                        item.setBackground(QColor(255, 0, 0))  # Rouge
+                self.table.setItem(row_idx, col_idx, item)
+                
+    
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
@@ -384,12 +442,64 @@ class StatistiquesPage(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("statistiquesPage")
+        
+        # Layout principal
         layout = QVBoxLayout()
-        label = QLabel("Statistiques")
+
+        # Titre de la page
+        label = QLabel("Statistiques des Candidats")
         label.setObjectName("titlePage")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
+
+        # Menu déroulant pour sélectionner les statistiques
+        self.statistiques_selection = QComboBox()
+        self.statistiques_selection.addItems(["Sélectionnez une statistique", "Taux de réussite", "Moyennes par matière", "Répartition des statuts"])
+        self.statistiques_selection.currentTextChanged.connect(self.update_statistics)
+        layout.addWidget(self.statistiques_selection)
+
+        # Bouton pour rafraîchir les statistiques
+        self.refresh_button = QPushButton("Rafraîchir")
+        self.refresh_button.clicked.connect(self.refresh_statistics)
+        layout.addWidget(self.refresh_button)
+
+        # Tableau pour afficher les statistiques
+        self.stats_table = QTableWidget()
+        self.stats_table.setColumnCount(5)  # Ajustez selon vos besoins
+        self.stats_table.setHorizontalHeaderLabels(["Statistique", "Valeur", "Description", "Date", "Commentaires"])
+        layout.addWidget(self.stats_table)
+
+        # Configuration du layout
         self.setLayout(layout)
+
+        # Chargement initial des statistiques
+        self.load_initial_statistics()
+
+    def load_initial_statistics(self):
+        """Charge les statistiques initiales dans le tableau."""
+        # Exemple de données, remplacez par vos données réelles
+        data = [
+            ["Taux de réussite", "85%", "Pourcentage d'admis", "2025", "Bon résultat"],
+            ["Moyenne générale", "14.5", "Moyenne des notes", "2025", "À améliorer"],
+        ]
+        
+        self.stats_table.setRowCount(len(data))
+        for row_idx, row_data in enumerate(data):
+            for col_idx, value in enumerate(row_data):
+                self.stats_table.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
+
+    def update_statistics(self):
+        """Met à jour les statistiques selon la sélection."""
+        selected_stat = self.statistiques_selection.currentText()
+        # Logique pour mettre à jour le tableau en fonction de la sélection
+        # Exemple : filtrer ou charger de nouvelles données
+        print(f"Selected statistic: {selected_stat}")
+    
+    def refresh_statistics(self):
+        """Rafraîchit les données des statistiques."""
+        # Logique pour rafraîchir les données
+        print("Refreshing statistics...")
+        self.load_initial_statistics()  # Recharge les données initiales
 
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
