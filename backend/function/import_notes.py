@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 
 
-def import_notes_from_excel(excel_file):
+def import_notes_from_excel(excel_file,main_window):
     """ Importe les notes depuis un fichier Excel et met à jour le statut des candidats """
     logging.info("🔍 Début de l'importation des notes depuis Excel...")
 
@@ -84,7 +84,6 @@ def import_notes_from_excel(excel_file):
 
         conn.commit()
         logging.info("✅ Importation des notes terminée avec succès.")
-        main_window = MainWindow()
         main_window.refresh_deliberation_signal.emit()
 
     except Exception as e:

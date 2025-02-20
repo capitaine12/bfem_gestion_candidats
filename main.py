@@ -32,10 +32,11 @@ if __name__ == "__main__":
     logging.info("🚀 Démarrage de l'application")
 
     app = QApplication(sys.argv)
+    window = MainWindow()
 
     try:
         logging.info("📌 Importation des notes et livrets scolaires depuis Excel...")
-        import_notes_from_excel("data/bdbfem.xlsx")
+        import_notes_from_excel("data/bdbfem.xlsx", window)
         import_livret_scolaire_from_excel("data/bdbfem.xlsx")
         logging.info("✅ Importation terminée.")
     except Exception as e:
@@ -44,7 +45,6 @@ if __name__ == "__main__":
     # Charger le fichier de styles
     load_stylesheet(app)
 
-    window = MainWindow()
     window.show()
 
     logging.info("🖥️ Interface graphique chargée.")

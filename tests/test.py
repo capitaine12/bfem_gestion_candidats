@@ -2,6 +2,8 @@ import sqlite3
 import os, sys
 import pandas as pd
 
+from frontend.views import CandidatsPage
+
 # Ajouter le dossier parent au chemin pour importer backend
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -9,6 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 #from backend.function.calculenotes import calculer_statut_candidat
 # Vérifier si des données sont bien récupérées depuis la base de données
 #print("recuperation", get_all_candidats())  
+
 
 
 """ from backend.function.calculenotes import recalculer_tous_les_statuts

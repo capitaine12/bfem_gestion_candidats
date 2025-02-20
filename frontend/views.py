@@ -3,6 +3,13 @@ from PyQt5.QtWidgets import (
     QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox
     )
 
+from PyQt5.QtWidgets import QFileDialog
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image
+from reportlab.lib.styles import getSampleStyleSheet
+
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtGui import QIcon
@@ -11,7 +18,7 @@ import os,sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from frontend.controllers import NavigationMenu  #? Import du menu de navigation
-from backend.database import delete_candidat, get_all_candidats  #? Import de la base de données
+from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut  #? Import de la base de données
 
 from frontend.partials.form import CandidatForm  #? Import du formulaire d'ajout / modification
 from frontend.partials.ia_data import ia_info  #? Importation des données du fichier ia_data
@@ -19,7 +26,6 @@ from frontend.partials.cards import CardsWindow
 from frontend.partials.detailsform import DetailsForm
 from frontend.partials.notesdialog import NotesDialog
 
-from backend.database import get_candidats_avec_statut
 
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: fnt de gestion d'effet de survole des btns CRUD ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: fnt de gestion d'effet de survole des btns CRUD ::::::::::::::::::::::::::::::::::::::::
@@ -317,13 +323,13 @@ class DeliberationPage(QWidget):
         self.setObjectName("deliberationPage")
         layout = QVBoxLayout()
 
+        # Titre de la page
         label = QLabel("📝 Délibération des candidats")
         label.setObjectName("titlePage")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
 
-
-         # Conteneur pour les boutons
+        # Conteneur pour les boutons
         button_layout = QVBoxLayout()
 
         # Création des boutons d'impression
@@ -335,7 +341,7 @@ class DeliberationPage(QWidget):
         self.btn_print_releve_2 = QPushButton("📊 Imprimer Relevé Notes - 2nd Tour")
 
 
-         # Ajout des boutons à la mise en page
+        # Ajout des boutons au layout
         button_layout.addWidget(self.btn_print_candidats)
         button_layout.addWidget(self.btn_print_anonymat)
         button_layout.addWidget(self.btn_print_resultats)
@@ -346,17 +352,18 @@ class DeliberationPage(QWidget):
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
-        # Connexion des boutons aux fonctions (à implémenter plus tard)
-        self.btn_print_candidats.clicked.connect(self.print_candidats)
+        # Connexion des boutons aux fonctions
+        self.btn_print_candidats.clicked.connect(self.imprimer_liste_candidats)
         self.btn_print_anonymat.clicked.connect(self.print_anonymat)
         self.btn_print_resultats.clicked.connect(self.print_resultats)
         self.btn_print_pv.clicked.connect(self.print_pv)
         self.btn_print_releve_1.clicked.connect(self.print_releve_1)
         self.btn_print_releve_2.clicked.connect(self.print_releve_2)
 
+
         # Menu déroulant pour filtrer les résultats
         self.filtre_statut = QComboBox()
-        self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour", 
+        self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour",
                                       "Repêchable au 2nd tour", "Échoué"])
         self.filtre_statut.currentTextChanged.connect(self.filtrer_par_statut)
         layout.addWidget(self.filtre_statut)
@@ -376,6 +383,35 @@ class DeliberationPage(QWidget):
 
         # Charger les résultats
         self.load_deliberation()
+
+    def filtrer_par_statut(self, statut_recherche):
+        """ Filtre les candidats selon leur statut sélectionné """
+        resultats = get_candidats_avec_statut()  # Assurez-vous que cette fonction est bien importée.
+
+        if statut_recherche != "Tous":
+            resultats = [candidat for candidat in resultats if candidat[-1] == statut_recherche]
+
+        self.table.setRowCount(len(resultats))
+
+        for row_idx, candidat in enumerate(resultats):
+            for col_idx, data in enumerate(candidat):
+                item = QTableWidgetItem(str(data))
+                
+                # Appliquer une couleur de fond selon le statut
+                if col_idx == 7:  # Colonne Statut
+                    if data == "Admis":
+                        item.setBackground(QColor(0, 255, 0))  # Vert
+                    elif data == "Second Tour":
+                        item.setBackground(QColor(255, 255, 0))  # Jaune
+                    elif data == "Repêchable au 1er tour":
+                        item.setBackground(QColor(0, 0, 255))  # Bleu
+                    elif data == "Repêchable au 2nd tour":
+                        item.setBackground(QColor(255, 165, 0))  # Orange
+                    elif data == "Échoué":
+                        item.setBackground(QColor(255, 0, 0))  # Rouge
+                
+                self.table.setItem(row_idx, col_idx, item)
+
 
     def load_deliberation(self):
         """ Charge les résultats des candidats depuis la base de données """
@@ -404,34 +440,106 @@ class DeliberationPage(QWidget):
     def refresh_deliberation(self):
         """ Rafraîchit l'affichage après l'importation des notes """
         self.load_deliberation()
-    
-    def filtrer_par_statut(self, statut_recherche):
-        """ Filtre l'affichage des candidats selon leur statut """
-        resultats = get_candidats_avec_statut()
-        
-        if statut_recherche != "Tous":
-            resultats = [c for c in resultats if c[-1] == statut_recherche]
 
-        self.table.setRowCount(len(resultats))
-        
-        for row_idx, candidat in enumerate(resultats):
-            for col_idx, data in enumerate(candidat):
-                item = QTableWidgetItem(str(data))
-                # Appliquer le style de fond au statut
-                if col_idx == 7:  # Colonne du statut
-                    statut = str(data)
-                    if statut == "Admis":
-                        item.setBackground(QColor(0, 255, 0))  # Vert
-                    elif statut == "Second Tour":
-                        item.setBackground(QColor(255, 255, 0))  # Jaune
-                    elif statut == "Repêchable au 1er tour":
-                        item.setBackground(QColor(0, 0, 255))  # Bleu
-                    elif statut == "Repêchable au 2nd tour":
-                        item.setBackground(QColor(255, 165, 0))  # Orange
-                    elif statut == "Échoué":
-                        item.setBackground(QColor(255, 0, 0))  # Rouge
-                self.table.setItem(row_idx, col_idx, item)
-                
+    def imprimer_liste_candidats(self):
+        """ Génère un PDF avec la liste des candidats """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer la liste des candidats", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  # L'utilisateur a annulé
+
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm)  # Logo à gauche
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  # Drapeau à droite
+            
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Créer un tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),  # Alignement du logo à gauche
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),  # Alignement du drapeau à droite
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),  # Alignement vertical du logo
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),  # Alignement vertical du drapeau
+            ]))
+            
+            elements.append(logo_table)
+            elements.append(Paragraph("\n", styles['Normal']))  # Saut de ligne
+
+            # Titre
+            elements.append(Paragraph("<b>Liste des Candidats</b>", styles['Title']))
+            elements.append(Paragraph("\n"))
+
+            # Récupération des candidats depuis la BDD
+            candidats = get_all_candidats()
+
+            # Définition du tableau
+            data = [["N° Table", "Prénom", "Nom", "Date de Naissance", "Lieu de Naissance", "Sexe", "Nationalité"]]
+
+            for candidat in candidats:
+                candidat_formate = [
+                    str(candidat[0]),  # Numéro de table
+                    candidat[1].capitalize(),  # Prénom
+                    candidat[2].upper(),  # Nom
+                    str(candidat[3]),  # Date de naissance
+                    candidat[4].title(),  # Lieu de naissance
+                    candidat[5].upper(),  # Sexe
+                    candidat[6].capitalize()  # Nationalité
+                ]
+                data.append(candidat_formate)
+
+            table = Table(data, colWidths=[3*cm, 3.5*cm, 3.5*cm, 3.5*cm, 4*cm, 1*cm, 3*cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            doc.build(elements)
+
+            # Afficher un message de succès
+            QMessageBox.information(self, "Succès", "Liste des candidats enregistrée avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+            
+#!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    def print_candidats(self):
+        QMessageBox.information(None, "Info", "Impression de la liste des candidats.")
+
+    def print_anonymat(self):
+        QMessageBox.information(None, "Info", "Impression de la liste anonyme.")
+
+    def print_resultats(self):
+        QMessageBox.information(None, "Info", "Impression des résultats.")
+
+    def print_pv(self):
+        QMessageBox.information(None, "Info", "Impression du PV de délibération.")
+
+    def print_releve_1(self):
+        QMessageBox.information(None, "Info", "Impression du relevé des notes - 1er Tour.")
+
+    def print_releve_2(self):
+        QMessageBox.information(None, "Info", "Impression du relevé des notes - 2nd Tour.")
+
+
     
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
@@ -507,7 +615,9 @@ class StatistiquesPage(QWidget):
 
 class MainWindow(QMainWindow):
     """Fenêtre principale de l'application."""
+    # Déclaration du signal
     refresh_deliberation_signal = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
@@ -517,7 +627,7 @@ class MainWindow(QMainWindow):
         #? Layout principal (horizontal)
         main_layout = QHBoxLayout()
         
-        text_label = QLabel("LOG BFEM") #? Nom du logiciel
+        text_label = QLabel("LOG.BFEM") #? Nom du logiciel
         text_label.setObjectName("appTitle")  #? Ajout du nom d'objet
         text_label.setAlignment(Qt.AlignLeft)
 
