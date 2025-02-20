@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, 
-    QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame
+    QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox
     )
 
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QIcon
 import os,sys
@@ -18,6 +18,8 @@ from frontend.partials.ia_data import ia_info  #? Importation des données du fi
 from frontend.partials.cards import CardsWindow
 from frontend.partials.detailsform import DetailsForm
 from frontend.partials.notesdialog import NotesDialog
+
+from backend.database import get_candidats_avec_statut
 
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: fnt de gestion d'effet de survole des btns CRUD ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: fnt de gestion d'effet de survole des btns CRUD ::::::::::::::::::::::::::::::::::::::::
@@ -309,16 +311,69 @@ class CandidatsPage(QWidget):
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE DELIBERATION ::::::::::::::::::::::::::::::::::::::::
 
 class DeliberationPage(QWidget):
-    """Page pour la délibération."""
+    """ Page pour la délibération """
     def __init__(self):
         super().__init__()
         self.setObjectName("deliberationPage")
         layout = QVBoxLayout()
-        label = QLabel("Délibération des candidats")
+
+        label = QLabel("📝 Délibération des candidats")
         label.setObjectName("titlePage")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
+
+        #menu déroulant pour filtrer les résultats
+        self.filtre_statut = QComboBox()
+        self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour", 
+                                    "Repêchable au 2nd tour", "Échoué"])
+        self.filtre_statut.currentTextChanged.connect(self.filtrer_par_statut)
+        layout.addWidget(self.filtre_statut)
+        self.filtre_statut.setStyleSheet("padding: 5px; border: 1px solid rgb(255, 102, 0); margin-bottom: 5px; font-size: 15px ")
+
+        # Création du tableau
+        self.table = QTableWidget()
+        self.table.setColumnCount(8)  
+        self.table.setHorizontalHeaderLabels([
+            "N° Table", "Prénom", "Nom", "Naissance", "Sexe", "Nationalité", "Points", "Statut"
+        ])
+        self.table.setObjectName("deliberationTable")
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
+
+        layout.addWidget(self.table)
         self.setLayout(layout)
+        
+        
+        # Charger les résultats
+        self.load_deliberation()
+
+    def load_deliberation(self):
+        """ Charge les résultats des candidats depuis la base de données """
+        resultats = get_candidats_avec_statut()
+
+        self.table.setRowCount(len(resultats))
+        for row_idx, candidat in enumerate(resultats):
+            for col_idx, data in enumerate(candidat):
+                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(data)))
+
+    def refresh_deliberation(self):
+        """ Rafraîchit l'affichage après l'importation des notes """
+        self.load_deliberation()
+    
+    def filtrer_par_statut(self, statut_recherche):
+        """ Filtre l'affichage des candidats selon leur statut """
+        resultats = get_candidats_avec_statut()
+        
+        if statut_recherche != "Tous":
+            resultats = [c for c in resultats if c[-1] == statut_recherche]
+
+        self.table.setRowCount(len(resultats))
+        
+        for row_idx, candidat in enumerate(resultats):
+            for col_idx, data in enumerate(candidat):
+                self.table.setItem(row_idx, col_idx, QTableWidgetItem(str(data)))
+
+
+
 
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
@@ -342,6 +397,7 @@ class StatistiquesPage(QWidget):
 
 class MainWindow(QMainWindow):
     """Fenêtre principale de l'application."""
+    refresh_deliberation_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
 
@@ -390,4 +446,7 @@ class MainWindow(QMainWindow):
         self.navbar.btn_deliberation.clicked.connect(lambda: self.pages.setCurrentWidget(self.page_deliberation))
         self.navbar.btn_statistiques.clicked.connect(lambda: self.pages.setCurrentWidget(self.page_statistiques))
         self.navbar.btn_quitter.clicked.connect(self.close)
-                              
+
+        #Connexion du signal pour mettre à jour la page délibération
+        self.refresh_deliberation_signal.connect(self.page_deliberation.refresh_deliberation)
+                            

@@ -1,0 +1,82 @@
+### 🔍 **Synthèse des tâches restantes selon le cahier des charges**  
+
+D'après le cahier des charges et les fonctionnalités déjà mises en place, voici les éléments restants à implémenter :  
+
+---
+
+## ✅ **1. Finalisation du système de délibération**  
+📌 **Ce qui est déjà fait :**  
+- Calcul du total des points.  
+- Attribution d’un statut : **"Admis", "Recalé", "Repêché"**.  
+
+📌 **Ce qui reste à faire :**  
+✔ **Prendre en compte les nouvelles règles de repêchage :**  
+- **171 à 179.9 points** → Repêchable d’office.  
+- **144 à 152.9 points** → Repêchable au 2nd tour.  
+- **Moins de 153 points** → Recalé.  
+- **Moyenne de cycle ≥ 12** → Permet le repêchage.  
+- **BFEM passé plus de 2 fois** → **Pas de repêchage.**  
+
+✔ **Gérer le passage au 2nd tour (RM10) avec les notes spécifiques :**  
+- **Français (Coef 3)**  
+- **Mathématiques (Coef 3)**  
+- **PC/LV2 (Coef 2)**  
+
+✔ **Mise à jour automatique après ajout/modification des notes.**  
+
+---
+
+## ✅ **2. Génération des numéros d’anonymat (RM13, RM16)**  
+📌 **À faire :**  
+✔ **Attribuer un numéro d’anonymat unique pour chaque candidat** lors de l’enregistrement.  
+✔ **Associer tous les numéros d’anonymat secondaires** aux différentes épreuves du candidat.  
+
+---
+
+## ✅ **3. Gestion des épreuves facultatives et EPS (RM2, RM3, RM15)**  
+📌 **Ce qui est déjà fait :**  
+- Stockage de la note d’épreuve facultative.  
+- Stockage de la note d’EPS.  
+
+📌 **Ce qui reste à faire :**  
+✔ **Appliquer le modèle de bonus/malus EPS :**  
+   - **Malus = 10 - Note EPS** si EPS < 10.  
+   - **Bonus = Note EPS - 10** si EPS > 10.  
+✔ **Appliquer le bonus de l’épreuve facultative (RM3) :**  
+   - **Bonus = Note EF - 10** si Note EF > 10.  
+✔ **Empêcher la saisie d’une note EF/EPS pour les candidats inéligibles (RM15).**  
+
+---
+
+## ✅ **4. Implémentation du paramétrage du jury**  
+📌 **Ce qui reste à faire :**  
+✔ Ajouter un **formulaire de paramétrage du jury** avec :  
+   - **IA Région**, **IEF Département**, **Localité**, **Centre d’Examen**, **Président de Jury**, **Téléphone**.  
+✔ **Associer chaque candidat à un jury** (mise à jour du modèle de données).  
+
+---
+
+## ✅ **5. Finalisation des formulaires et interface graphique**  
+📌 **Ce qui reste à faire :**  
+✔ **Styliser les champs des formulaires** (espacement, taille des champs, couleurs…).  
+✔ **Optimiser l’affichage des notes** (colonnes bien alignées).  
+✔ **Ajouter les validations manquantes (champs obligatoires, erreurs de saisie…).**  
+✔ **Ajouter une confirmation avant la suppression d’un candidat.**  
+
+---
+
+## ✅ **6. Exportation et impression des résultats**  
+📌 **Ce qui reste à faire :**  
+✔ Générer un **fichier Excel ou PDF** contenant :  
+   - La **liste des candidats** avec leur statut final.  
+   - Les **détails des notes et total des points**.  
+✔ Ajouter un **bouton "Exporter les résultats"** sur l’interface.  
+
+---
+
+## 🔥 **On attaque quelle partie en premier ?** 😃  
+- **Système de délibération complet**  
+- **Génération des anonymats**  
+- **Gestion du jury**  
+- **Finalisation de l’interface**  
+- **Exportation des résultats**  

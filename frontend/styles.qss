@@ -20,6 +20,7 @@ QLabel#appTitle {
     font-weight: bold;
     color: rgb(255, 102, 0);
     text-align: center;
+    
 }
 
 

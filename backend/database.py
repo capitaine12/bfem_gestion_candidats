@@ -119,7 +119,6 @@ def create_tables():
 
 # Fonction pour importer des candidats depuis un fichier Excel
 
-
 def import_candidats_from_excel(excel_file="data/bdbfem.xlsx"):
     logging.info(" Début de l'importation des candidats depuis Excel...")
     
@@ -190,6 +189,9 @@ def candidat_existe(num_table):
 
     return result > 0  # Retourne True si le numéro de table existe déjà
 
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 # Fonction pour récupérer tous les candidats
 def get_all_candidats():
     try:
@@ -214,6 +216,56 @@ def get_all_candidats():
         conn.close()
     return candidats
 
+# recuperation de candidat avec son status
+def get_candidats_avec_statut():
+    """ Récupère tous les candidats avec leur statut de délibération """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT c.num_table, c.prenom, c.nom, c.date_naissance, c.sexe, 
+               c.nationalite, d.total_points, COALESCE(d.statut, 'Non délibéré')
+        FROM candidats c
+        LEFT JOIN deliberation d ON c.id = d.candidat_id 
+        ORDER BY c.nom, c.date_naissance
+    """)
+    
+    candidats = cursor.fetchall()
+    conn.close()
+    return candidats
+
+
+# recuperation des notes des candidats
+def get_all_notes():
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Base de données verrouillée : {e}")
+        return
+    
+    cursor.execute("""
+        SELECT c.num_table, n.moy_6e, n.moy_5e, n.moy_4e, n.moy_3e, n.note_eps,
+               n.note_cf, n.note_ort, n.note_tsq, n.note_svt, n.note_ang1, 
+               n.note_math, n.note_hg, n.note_ic, n.note_pc_lv2, n.note_ang2, 
+               n.note_ep_fac,
+               (n.moy_6e + n.moy_5e + n.moy_4e + n.moy_3e + n.note_eps +
+                n.note_cf + n.note_ort + n.note_tsq + n.note_svt +
+                n.note_ang1 + n.note_math + n.note_hg + n.note_ic + 
+                n.note_pc_lv2 + n.note_ang2 + n.note_ep_fac) AS total_points
+        FROM candidats c
+        LEFT JOIN notes n ON c.id = n.candidat_id
+    """)
+    
+    notes = cursor.fetchall()
+    conn.close()
+    return notes
+
+
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 
 # Fonction pour ajouter un candidat
 def add_candidat(num_table, prenom, nom, date_naissance, lieu_naissance, sexe, nationalite, 
@@ -247,75 +299,6 @@ def add_candidat(num_table, prenom, nom, date_naissance, lieu_naissance, sexe, n
     finally:
         conn.close()
 
-
-# Fonction pour modifier un candidat existant
-def update_candidat(num_table, prenom, nom, date_naissance, lieu_naissance, sexe, nationalite, 
-                     epreuve_facultative, aptitude_sportive, jury_id=None):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-    except sqlite3.OperationalError as e:
-        logging.error(f"⚠️ Base de données verrouillée : {e}")
-        return
-    
-    try: 
-        cursor.execute("""
-            UPDATE candidats 
-            SET prenom = ?, nom = ?, date_naissance = ?, lieu_naissance = ?, sexe = ?, nationalite = ?, 
-                epreuve_facultative = ?, aptitude_sportive = ?, jury_id = ? 
-            WHERE num_table = ?
-        """, (prenom, nom, date_naissance, lieu_naissance, sexe, nationalite, 
-            epreuve_facultative, aptitude_sportive, jury_id, num_table))
-        conn.commit()
-    finally:
-        conn.close()
-
-
-# Fonction pour supprimer un candidat
-def delete_candidat(num_table):
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-    except sqlite3.OperationalError as e:
-        logging.error(f"⚠️ Base de données verrouillée : {e}")
-        return
-    
-    cursor.execute("DELETE FROM candidats WHERE num_table = ?", (num_table,))
-    
-    conn.commit()
-    conn.close()
-
-#?==================================================================
-
-def get_all_notes():
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-    except sqlite3.OperationalError as e:
-        logging.error(f"⚠️ Base de données verrouillée : {e}")
-        return
-    
-    cursor.execute("""
-        SELECT c.num_table, n.moy_6e, n.moy_5e, n.moy_4e, n.moy_3e, n.note_eps,
-               n.note_cf, n.note_ort, n.note_tsq, n.note_svt, n.note_ang1, 
-               n.note_math, n.note_hg, n.note_ic, n.note_pc_lv2, n.note_ang2, 
-               n.note_ep_fac,
-               (n.moy_6e + n.moy_5e + n.moy_4e + n.moy_3e + n.note_eps +
-                n.note_cf + n.note_ort + n.note_tsq + n.note_svt +
-                n.note_ang1 + n.note_math + n.note_hg + n.note_ic + 
-                n.note_pc_lv2 + n.note_ang2 + n.note_ep_fac) AS total_points
-        FROM candidats c
-        LEFT JOIN notes n ON c.id = n.candidat_id
-    """)
-    
-    notes = cursor.fetchall()
-    conn.close()
-    return notes
-
-
-#?==================================================================
 def add_notes(num_table, notes):
     """ Ajoute les notes d'un candidat dans la base de données """
     logging.info(f"📌 Ajout des notes pour le candidat {num_table}")
@@ -343,7 +326,32 @@ def add_notes(num_table, notes):
         conn.close()
 
 
-#?==================================================================
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+# Fonction pour modifier un candidat existant
+def update_candidat(num_table, prenom, nom, date_naissance, lieu_naissance, sexe, nationalite, 
+                     epreuve_facultative, aptitude_sportive, jury_id=None):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Base de données verrouillée : {e}")
+        return
+    
+    try: 
+        cursor.execute("""
+            UPDATE candidats 
+            SET prenom = ?, nom = ?, date_naissance = ?, lieu_naissance = ?, sexe = ?, nationalite = ?, 
+                epreuve_facultative = ?, aptitude_sportive = ?, jury_id = ? 
+            WHERE num_table = ?
+        """, (prenom, nom, date_naissance, lieu_naissance, sexe, nationalite, 
+            epreuve_facultative, aptitude_sportive, jury_id, num_table))
+        conn.commit()
+    finally:
+        conn.close()
 
 def update_notes(num_table, notes):
     """ Met à jour les notes d'un candidat existant """
@@ -372,7 +380,27 @@ def update_notes(num_table, notes):
     conn.close()
 
 
-#?==================================================================
+
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE SUPPRESSION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE SUPPRESSION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE SUPPRESSION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+
+# Fonction pour supprimer un candidat
+def delete_candidat(num_table):
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Base de données verrouillée : {e}")
+        return
+    
+    cursor.execute("DELETE FROM candidats WHERE num_table = ?", (num_table,))
+    
+    conn.commit()
+    conn.close()
+
+
 
 # Création des tables au lancement & importaion des données dans la BDD
 create_tables()

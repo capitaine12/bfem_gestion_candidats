@@ -7,7 +7,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from backend.function.db_connection import get_db_connection
 from backend.function.calculenotes import calculer_statut_candidat
-
+from frontend.views import DeliberationPage
+from frontend.views import MainWindow
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -83,6 +84,8 @@ def import_notes_from_excel(excel_file):
 
         conn.commit()
         logging.info("✅ Importation des notes terminée avec succès.")
+        main_window = MainWindow()
+        main_window.refresh_deliberation_signal.emit()
 
     except Exception as e:
         logging.error(f"❌ Erreur lors de l'importation des notes : {e}")
