@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, 
-    QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox
+    QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox, QGridLayout
     )
 
 from PyQt5.QtWidgets import QFileDialog
@@ -329,8 +329,10 @@ class DeliberationPage(QWidget):
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
 
-        # Conteneur pour les boutons
-        button_layout = QVBoxLayout()
+        # Conteneur pour les boutons (grille)
+        button_layout = QGridLayout()
+        button_layout.setAlignment(Qt.AlignCenter)  # Centrer les boutons
+        button_layout.setSpacing(10)  # Espacement uniforme
 
         # Création des boutons d'impression
         self.btn_print_candidats = QPushButton("📄 Imprimer Liste des Candidats")
@@ -340,38 +342,53 @@ class DeliberationPage(QWidget):
         self.btn_print_releve_1 = QPushButton("📊 Imprimer Relevé Notes - 1er Tour")
         self.btn_print_releve_2 = QPushButton("📊 Imprimer Relevé Notes - 2nd Tour")
 
+        # Style des boutons
+        for button in [self.btn_print_candidats, self.btn_print_anonymat, self.btn_print_resultats,
+                       self.btn_print_pv, self.btn_print_releve_1, self.btn_print_releve_2]:
+            button.setStyleSheet("""
+                QPushButton {
+                    background-color: rgb(255, 102, 0);
+                    color: white;
+                    border: none;
+                    padding: 10px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                }
+                QPushButton:hover {
+                    background-color: rgb(200, 80, 0);
+                }
+            """)
 
-        # Ajout des boutons au layout
-        button_layout.addWidget(self.btn_print_candidats)
-        button_layout.addWidget(self.btn_print_anonymat)
-        button_layout.addWidget(self.btn_print_resultats)
-        button_layout.addWidget(self.btn_print_pv)
-        button_layout.addWidget(self.btn_print_releve_1)
-        button_layout.addWidget(self.btn_print_releve_2)
+        # Ajout des boutons à la grille (2 lignes, 3 colonnes)
+        button_layout.addWidget(self.btn_print_candidats, 0, 0)
+        button_layout.addWidget(self.btn_print_anonymat, 0, 1)
+        button_layout.addWidget(self.btn_print_resultats, 0, 2)
+        button_layout.addWidget(self.btn_print_pv, 1, 0)
+        button_layout.addWidget(self.btn_print_releve_1, 1, 1)
+        button_layout.addWidget(self.btn_print_releve_2, 1, 2)
 
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
         # Connexion des boutons aux fonctions
         self.btn_print_candidats.clicked.connect(self.imprimer_liste_candidats)
-        self.btn_print_anonymat.clicked.connect(self.print_anonymat)
+        self.btn_print_anonymat.clicked.connect(self.imprimer_liste_anonymat)
         self.btn_print_resultats.clicked.connect(self.print_resultats)
         self.btn_print_pv.clicked.connect(self.print_pv)
         self.btn_print_releve_1.clicked.connect(self.print_releve_1)
         self.btn_print_releve_2.clicked.connect(self.print_releve_2)
 
-
         # Menu déroulant pour filtrer les résultats
         self.filtre_statut = QComboBox()
         self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour",
-                                      "Repêchable au 2nd tour", "Échoué"])
+                                     "Repêchable au 2nd tour", "Échoué"])
         self.filtre_statut.currentTextChanged.connect(self.filtrer_par_statut)
         layout.addWidget(self.filtre_statut)
-        self.filtre_statut.setStyleSheet("padding: 5px; border: 1px solid rgb(255, 102, 0); margin-bottom: 5px; font-size: 15px ")
+        self.filtre_statut.setStyleSheet("padding: 5px; border: 1px solid rgb(255, 102, 0); margin-bottom: 5px; font-size: 15px")
 
         # Création du tableau
         self.table = QTableWidget()
-        self.table.setColumnCount(8)  
+        self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels([
             "N° Table", "Prénom", "Nom", "Naissance", "Sexe", "Nationalité", "Points", "Statut"
         ])
@@ -457,8 +474,8 @@ class DeliberationPage(QWidget):
             styles = getSampleStyleSheet()
 
             # Images : Drapeau et Logo
-            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm)  # Logo à gauche
-            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  # Drapeau à droite
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
             
             # En-tête officiel
             header_text = """<para align=center>
@@ -518,7 +535,93 @@ class DeliberationPage(QWidget):
 
         except Exception as e:
             QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
-            
+
+    
+    #!::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+    def imprimer_liste_anonymat(self):
+        """ Génère un PDF avec la liste d'anonymat """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer la liste d'anonymat", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  # L'utilisateur a annulé
+
+        try:
+            # Récupérer les candidats depuis la base de données ou une autre source
+            candidats = get_candidats_avec_statut()  # Assurez-vous que cette fonction est disponible
+
+            # Générer la liste d'anonymat
+            liste_anonymat = self.generer_liste_anonymat(candidats)
+
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5 * cm, height=1 * cm)
+            logo = Image("frontend/images/logo.png", width=1.5 * cm, height=1 * cm)
+           
+
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Créer un tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2 * cm, None, 2 * cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+
+            elements.append(logo_table)
+            elements.append(Paragraph("\n", styles['Normal']))  # Saut de ligne
+
+            # Titre
+            elements.append(Paragraph("<b>Liste d'Anonymat</b>", styles['Title']))
+            elements.append(Paragraph("\n"))
+
+            # Définition du tableau d'anonymat
+            data = [["N° Anonymat", "N° Table", "Prénom", "Nom"]]  # Modification ici
+
+            for index, candidat in enumerate(candidats):
+                anonymat = f"ANO{index + 1:03d}"  # Générer un numéro d'anonymat
+                data.append([anonymat, candidat[0], candidat[1], candidat[2]])  # Ajouter les colonnes séparées
+
+            table = Table(data, colWidths=[4 * cm, 3 * cm, 3.5 * cm, 3.5 * cm])  # Ajustez les largeurs si nécessaire
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            doc.build(elements)
+
+            # Afficher un message de succès
+            QMessageBox.information(self, "Succès", "Liste d'anonymat enregistrée avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+
+    def generer_liste_anonymat(self, candidats):
+        """ Génère une liste d'anonymat pour les candidats """
+        liste_anonymat = []
+        for index, candidat in enumerate(candidats):
+            anonymat = f"ANO{index + 1:03d}"  # Générer un numéro d'anonymat
+            liste_anonymat.append((anonymat, candidat[0], candidat[1], candidat[2]))  # Inclure N° Table, Prénom, Nom
+        return liste_anonymat
+                
 #!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def print_candidats(self):
