@@ -1,8 +1,11 @@
+from datetime import datetime
+import logging
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, 
     QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox, QGridLayout
     )
 
+import sqlite3
 from PyQt5.QtWidgets import QFileDialog
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -316,6 +319,36 @@ class CandidatsPage(QWidget):
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE DELIBERATION ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE DELIBERATION ::::::::::::::::::::::::::::::::::::::::
 
+def get_resultats():
+    """ Récupère les résultats des candidats depuis la base de données """
+    try:
+        with sqlite3.connect('data/candidatbfem.db') as conn:
+            cursor = conn.cursor()
+
+            # Requête avec jointure pour récupérer les résultats
+            cursor.execute("""
+                SELECT c.num_table, c.prenom, c.nom, d.total_points, d.statut
+                FROM candidats c
+                JOIN deliberation d ON c.id = d.candidat_id
+                ORDER BY CASE d.statut
+                    WHEN 'Admis' THEN 1
+                    WHEN 'Repêchable au 1er tour' THEN 2
+                    WHEN 'Second tour' THEN 3
+                    WHEN 'Repêchable au 2nd tour' THEN 4
+                    WHEN 'Échoué' THEN 5
+                    ELSE 6
+                END
+            """)
+
+            resultats = cursor.fetchall()
+        return resultats
+
+    except sqlite3.Error as e:
+        logging.warning(f"❌ Erreur lors de l'accès à la base de données : {e}")
+        return []
+resultats = get_resultats()  # Fonction pour récupérer les résultats
+pv = generer_pv(resultats)
+print(pv)
 class DeliberationPage(QWidget):
     """ Page pour la délibération """
     def __init__(self):
@@ -373,8 +406,8 @@ class DeliberationPage(QWidget):
         # Connexion des boutons aux fonctions
         self.btn_print_candidats.clicked.connect(self.imprimer_liste_candidats)
         self.btn_print_anonymat.clicked.connect(self.imprimer_liste_anonymat)
-        self.btn_print_resultats.clicked.connect(self.print_resultats)
-        self.btn_print_pv.clicked.connect(self.print_pv)
+        self.btn_print_resultats.clicked.connect(self.imprimer_liste_resultats)
+        self.btn_print_pv.clicked.connect(self.generer_pv)
         self.btn_print_releve_1.clicked.connect(self.print_releve_1)
         self.btn_print_releve_2.clicked.connect(self.print_releve_2)
 
@@ -417,15 +450,15 @@ class DeliberationPage(QWidget):
                 # Appliquer une couleur de fond selon le statut
                 if col_idx == 7:  # Colonne Statut
                     if data == "Admis":
-                        item.setBackground(QColor(0, 255, 0))  # Vert
+                        item.setBackground(QColor(0, 255, 0))
                     elif data == "Second Tour":
-                        item.setBackground(QColor(255, 255, 0))  # Jaune
+                        item.setBackground(QColor(255, 255, 0)) 
                     elif data == "Repêchable au 1er tour":
-                        item.setBackground(QColor(0, 0, 255))  # Bleu
+                        item.setBackground(QColor(0, 0, 255))
                     elif data == "Repêchable au 2nd tour":
-                        item.setBackground(QColor(255, 165, 0))  # Orange
+                        item.setBackground(QColor(255, 165, 0))  
                     elif data == "Échoué":
-                        item.setBackground(QColor(255, 0, 0))  # Rouge
+                        item.setBackground(QColor(255, 0, 0)) 
                 
                 self.table.setItem(row_idx, col_idx, item)
 
@@ -442,15 +475,15 @@ class DeliberationPage(QWidget):
                 if col_idx == 7:  # Colonne du statut
                     statut = str(data)
                     if statut == "Admis":
-                        item.setBackground(QColor(0, 255, 0))  # Vert
+                        item.setBackground(QColor(0, 255, 0))
                     elif statut == "Second Tour":
-                        item.setBackground(QColor(255, 255, 0))  # Jaune
+                        item.setBackground(QColor(255, 255, 0)) 
                     elif statut == "Repêchable au 1er tour":
-                        item.setBackground(QColor(0, 0, 255))  # Bleu
+                        item.setBackground(QColor(0, 0, 255))
                     elif statut == "Repêchable au 2nd tour":
-                        item.setBackground(QColor(255, 165, 0))  # Orange
+                        item.setBackground(QColor(255, 165, 0))  
                     elif statut == "Échoué":
-                        item.setBackground(QColor(255, 0, 0))  # Rouge
+                        item.setBackground(QColor(255, 0, 0)) 
 
                 self.table.setItem(row_idx, col_idx, item)
 
@@ -622,6 +655,112 @@ class DeliberationPage(QWidget):
             liste_anonymat.append((anonymat, candidat[0], candidat[1], candidat[2]))  # Inclure N° Table, Prénom, Nom
         return liste_anonymat
                 
+#!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+    def imprimer_liste_resultats(self):
+        """ Génère un PDF avec la liste des résultats """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer la liste des résultats", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  # L'utilisateur a annulé
+
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5 * cm, height=1 * cm)
+            logo = Image("frontend/images/logo.png", width=1.5 * cm, height=1 * cm)
+
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Créer un tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2 * cm, None, 2 * cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+
+            elements.append(logo_table)
+            elements.append(Paragraph("\n", styles['Normal']))  # Saut de ligne
+
+            # Titre
+            elements.append(Paragraph("<b>Liste des Résultats</b>", styles['Title']))
+            elements.append(Paragraph("\n"))
+
+            # Récupération des résultats depuis la BDD
+            resultats = get_resultats()  # Assurez-vous que cette fonction est définie
+
+            # Définition du tableau
+            data = [["N° Table", "Prénom", "Nom", "Points", "Statut"]]
+
+            for resultat in resultats:
+                resultat_formate = [
+                    str(resultat[0]),  # Numéro de table
+                    resultat[1].capitalize(),  # Prénom
+                    resultat[2].upper(),  # Nom
+                    str(resultat[3]),  # Points
+                    resultat[4].capitalize()  # Statut
+                ]
+                data.append(resultat_formate)
+
+            table = Table(data, colWidths=[2 * cm, 4 * cm, 4 * cm, 2 * cm, 6 * cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            doc.build(elements)
+
+            # Afficher un message de succès
+            QMessageBox.information(self, "Succès", "Liste des résultats enregistrée avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+
+
+   
+#!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+    def generer_pv(resultats):
+            """ Génère un procès-verbal de délibérations basé sur les résultats """
+            date = datetime.now().strftime("%d-%m-%Y")  # Date actuelle au format YYYY-MM-DD
+            participants = ["Nom1", "Nom2", "Nom3"]  # Remplacez par les noms des participants
+            ordre_du_jour = ["Examen des résultats des candidats"]
+            
+            pv = f"Procès-Verbal de Délibération\nDate : {date}\n\n"
+            pv += "Participants : " + ", ".join(participants) + "\n\n"
+            pv += "Ordre du jour : " + ", ".join(ordre_du_jour) + "\n\n"
+            pv += "Délibérations :\n"
+            
+            for resultat in resultats:
+                num_table, prenom, nom, total_points, statut = resultat
+                pv += f"- Candidat {prenom} {nom} (Numéro de table : {num_table}) : {statut}\n"
+            
+            pv += "\nSignatures :\n"
+            pv += "_________________\n"  # Ligne pour la signature
+            
+            return pv
+
+
 #!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def print_candidats(self):
