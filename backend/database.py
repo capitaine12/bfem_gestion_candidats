@@ -27,16 +27,19 @@ def create_tables():
     # Table Jury
     
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS jury (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ia_region TEXT NOT NULL,
-                ief_departement TEXT NOT NULL,
-                localite TEXT NOT NULL,
-                centre_examen TEXT NOT NULL,
-                president_jury TEXT NOT NULL,
-                telephone TEXT NOT NULL
-            )
-        """)
+                CREATE TABLE IF NOT EXISTS jury (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    num_jury TEXT UNIQUE NOT NULL,
+                    ia_region TEXT NOT NULL,
+                    ief_departement TEXT NOT NULL,
+                    localite TEXT NOT NULL,
+                    centre_examen TEXT NOT NULL,
+                    president_jury TEXT NOT NULL,
+                    telephone TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    cle_acces TEXT NOT NULL
+                )
+            """)
 
         # Table Candidat
         cursor.execute("""
@@ -109,7 +112,7 @@ def create_tables():
         """)
 
         conn.commit()
-        logging.info("✅ Tables créées avec succès.")
+        logging.info("✅ Les tables sont créées avec succès.")
         
     except Exception as e:
         logging.error(f"❌ Erreur lors de la création des tables : {e}")
@@ -170,6 +173,10 @@ def import_candidats_from_excel(excel_file="data/bdbfem.xlsx"):
     finally:
         conn.close()
 
+
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE VERIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE VERIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+#?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE VERIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 # Vérification si un candidat existe déjà
 def candidat_existe(num_table):
     
@@ -189,9 +196,12 @@ def candidat_existe(num_table):
 
     return result > 0  # Retourne True si le numéro de table existe déjà
 
+
+
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE RECUPERATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
+
 # Fonction pour récupérer tous les candidats
 def get_all_candidats():
     try:
@@ -242,7 +252,7 @@ def get_all_notes():
         conn = get_db_connection()
         cursor = conn.cursor()
     except sqlite3.OperationalError as e:
-        logging.error(f"⚠️ Base de données verrouillée : {e}")
+        logging.warning(f"⚠️ Base de données verrouillée : {e}")
         return
     
     cursor.execute("""
@@ -261,6 +271,18 @@ def get_all_notes():
     notes = cursor.fetchall()
     conn.close()
     return notes
+
+
+def get_all_jurys():
+    """ Récupère tous les jurys de la base de données """
+    conn = sqlite3.connect("data/candidatbfem.db")
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM jury")
+    jurys = cursor.fetchall()
+    
+    conn.close()
+    return jurys
 
 
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -326,6 +348,8 @@ def add_notes(num_table, notes):
         conn.close()
 
 
+
+
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS DE MODIFICATION BD :::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -375,7 +399,7 @@ def update_notes(num_table, notes):
 
     
     conn.commit()
-    logging.infot(f"✅ Notes mises à jour pour {num_table}, recalcul du statut...")
+    logging.info(f"✅ Notes mises à jour pour {num_table}, recalcul du statut...")
     calculer_statut_candidat(num_table)
     conn.close()
 
@@ -404,6 +428,44 @@ def delete_candidat(num_table):
 
 # Création des tables au lancement & importaion des données dans la BDD
 create_tables()
+
+def ajouter_jury(num_jury, ia_region, ief_departement, localite, centre_examen, president_jury, telephone, email, cle_acces):
+    """ Ajoute un jury dans la base de données avec gestion du verrouillage et des erreurs."""
+    try:
+        conn = sqlite3.connect("data/candidatbfem.db", timeout=10)  # Ajout du timeout
+        cursor = conn.cursor()
+
+        cursor.execute(""" 
+            INSERT INTO jury (num_jury, ia_region, ief_departement, localite, centre_examen, 
+                              president_jury, telephone, email, cle_acces)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (num_jury, ia_region, ief_departement, localite, centre_examen, 
+              president_jury, telephone, email, cle_acces))
+
+        conn.commit()
+        logging.info(f"✅ Jury ajouté : {num_jury}")
+
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Base de données verrouillée : {e}")
+
+    except sqlite3.IntegrityError:
+        logging.error(f"⚠️ Jury {num_jury} existe déjà.")
+
+    except Exception as e:
+        logging.error(f"❌ Erreur lors de l'ajout du jury : {e}")
+
+    finally:
+        conn.close()
+
+jury_info = [
+    ("JURY001", "IA DAKAR", "IEF Dakar Plateau", "Dakar", "Lycée Blaise Diagne", "Mamadou Diop", "+221 77 123 45 67", "jury.dakar@example.com", "JURYDKR2024"),
+    ("JURY002", "IA THIÈS", "IEF Thiès Nord", "Thiès", "Collège Malick Sy", "Aissatou Ndiaye", "+221 76 987 65 43", "jury.thies@example.com", "JURYTHIES2024"),
+    ("JURY003", "IA SAINT-LOUIS", "IEF Saint-Louis", "Saint-Louis", "Lycée Cheikh Oumar Foutiyou Tall", "Boubacar Faye", "+221 78 654 32 10", "jury.saintlouis@example.com", "JURYSL2024"),
+    ("JURY004", "IA KAFFRINE", "IEF Kaffrine", "Kaffrine", "CEM Kaffrine", "Fatou Diouf", "+221 70 123 45 67", "jury.kaffrine@example.com", "JURYKAFF2024")
+]
+
+for jury in jury_info:
+    ajouter_jury(*jury)  # Insérer chaque jury
 
 import_candidats_from_excel()
 

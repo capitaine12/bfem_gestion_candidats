@@ -12,3 +12,5 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 logger.info("📌 Test d'écriture dans app.log")
+
+

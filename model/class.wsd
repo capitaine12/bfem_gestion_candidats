@@ -41,7 +41,7 @@ class Jury {
     - string ief_departement
     - string localite
     - string centre_examen
-    - string president_jury
+    - string president_jury_jury
     - string telephone
 }
 

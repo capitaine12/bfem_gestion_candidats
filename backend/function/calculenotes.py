@@ -75,7 +75,7 @@ def calculer_statut_candidat(num_table, conn=None):
         # Statut en fonction des règles métiers
         statut = "Recalé"
         if total_points >= 180:
-            statut = "Admis"
+            statut = "Admis Doffice"
         elif total_points >= 153:
             statut = "Second Tour"
         elif total_points < 153:

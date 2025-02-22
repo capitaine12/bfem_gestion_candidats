@@ -26,7 +26,7 @@ SELECT * FROM notes WHERE candidat_id = (SELECT id FROM candidats WHERE num_tabl
 SELECT * FROM deliberation WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 53);
 
 --:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-SELECT COUNT(*) FROM candidats;
+SELECT * FROM candidats;
 SELECT COUNT(*) FROM notes;
 SELECT COUNT(*) FROM livret_scolaire;
 
@@ -38,3 +38,12 @@ SELECT * FROM candidats WHERE num_table = 100;
 SELECT * FROM notes WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);
 SELECT * FROM livret_scolaire WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);
 SELECT * FROM deliberation WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 100);
+
+SELECT * FROM jury;
+ALTER TABLE jury ADD COLUMN num_jury VARCHAR(50) UNIQUE;
+INSERT INTO jury (localite) VALUES ('DAKAR');
+PRAGMA journal_mode=WAL;
+PRAGMA table_info(candidats);
+INSERT INTO jury (num_jury, ia_region, ief_departement, localite, centre_examen, president_jury, telephone, email, cle_acces) 
+VALUES ("JURY001", "IA DAKAR", "IEF Dakar Plateau", "Dakar", "Lycée Blaise Diagne", "Mamadou Diop", "+221 77 123 45 67", "jury.dakar@example.com", "JURYDKR2024");
+.tables

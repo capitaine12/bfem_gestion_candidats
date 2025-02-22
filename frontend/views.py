@@ -10,9 +10,9 @@ from PyQt5.QtWidgets import QFileDialog
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import cm
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-
+import matplotlib.pyplot as plt
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtGui import QIcon
@@ -21,7 +21,7 @@ import os,sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from frontend.controllers import NavigationMenu  #? Import du menu de navigation
-from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut  #? Import de la base de données
+from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut, get_all_jurys  #? Import de la base de données
 
 from frontend.partials.form import CandidatForm  #? Import du formulaire d'ajout / modification
 from frontend.partials.ia_data import ia_info  #? Importation des données du fichier ia_data
@@ -346,9 +346,9 @@ def get_resultats():
     except sqlite3.Error as e:
         logging.warning(f"❌ Erreur lors de l'accès à la base de données : {e}")
         return []
-resultats = get_resultats()  # Fonction pour récupérer les résultats
+""" resultats = get_resultats()  # Fonction pour récupérer les résultats
 pv = generer_pv(resultats)
-print(pv)
+print(pv) """
 class DeliberationPage(QWidget):
     """ Page pour la délibération """
     def __init__(self):
@@ -407,7 +407,7 @@ class DeliberationPage(QWidget):
         self.btn_print_candidats.clicked.connect(self.imprimer_liste_candidats)
         self.btn_print_anonymat.clicked.connect(self.imprimer_liste_anonymat)
         self.btn_print_resultats.clicked.connect(self.imprimer_liste_resultats)
-        self.btn_print_pv.clicked.connect(self.generer_pv)
+        self.btn_print_pv.clicked.connect(self.imprimer_pv_deliberation)
         self.btn_print_releve_1.clicked.connect(self.print_releve_1)
         self.btn_print_releve_2.clicked.connect(self.print_releve_2)
 
@@ -738,29 +738,125 @@ class DeliberationPage(QWidget):
    
 #!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+    def imprimer_pv_deliberation(self):
+        """ Génère un PDF avec le Procès-Verbal de Délibération """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer le PV de Délibération", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
 
+        if not file_path:
+            return  # L'utilisateur a annulé
 
-    def generer_pv(resultats):
-            """ Génère un procès-verbal de délibérations basé sur les résultats """
-            date = datetime.now().strftime("%d-%m-%Y")  # Date actuelle au format YYYY-MM-DD
-            participants = ["Nom1", "Nom2", "Nom3"]  # Remplacez par les noms des participants
-            ordre_du_jour = ["Examen des résultats des candidats"]
-            
-            pv = f"Procès-Verbal de Délibération\nDate : {date}\n\n"
-            pv += "Participants : " + ", ".join(participants) + "\n\n"
-            pv += "Ordre du jour : " + ", ".join(ordre_du_jour) + "\n\n"
-            pv += "Délibérations :\n"
-            
-            for resultat in resultats:
-                num_table, prenom, nom, total_points, statut = resultat
-                pv += f"- Candidat {prenom} {nom} (Numéro de table : {num_table}) : {statut}\n"
-            
-            pv += "\nSignatures :\n"
-            pv += "_________________\n"  # Ligne pour la signature
-            
-            return pv
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
 
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
+            
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
 
+            # Tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+            
+            elements.append(logo_table)
+            elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
+
+            # Titre du PV
+            elements.append(Paragraph("<b>PROCÈS-VERBAL DE DÉLIBÉRATION</b>", styles['Title']))
+            elements.append(Spacer(1, 10)) 
+
+            # Date actuelle
+            date_str = datetime.now().strftime("%d/%m/%Y")
+            elements.append(Paragraph(f"Date : {date_str}", styles['Normal']))
+
+            # Récupération des informations du jury
+            jury_info = get_all_jurys()
+            if jury_info:
+                jury = jury_info[0]  # On prend le premier jury
+                jury_text = f"""
+                    <b>IA :</b> {jury[1]}<br/>
+                    <b>Localité :</b> {jury[3]}<br/>
+                    <b>Centre d'examen :</b> {jury[4]}<br/>
+                    <b>Saison :</b> 2024/2025<br/>
+                    <b>Président du Jury :</b> {jury[5]}<br/>
+                    <b>N° Jury :</b> {jury[0]}<br/>
+                    <b>Examinateurs :</b> M. Diallo, Mme Ba, M. Ndiaye
+                """
+                elements.append(Paragraph(jury_text, styles['Normal']))
+                elements.append(Spacer(1, 10))
+
+            # Récupération des résultats depuis la BDD
+            candidats = get_candidats_avec_statut()
+
+            # Vérification si des candidats existent
+            if not candidats:
+                QMessageBox.warning(self, "Avertissement", "Aucun candidat trouvé dans la base de données.")
+                return
+
+            # Tri des candidats par total de points (du plus élevé au plus bas)
+            candidats.sort(key=lambda x: x[6], reverse=True)
+
+            # Remplacement des statuts "Repêchable au 1er tour" -> "Admis" et "Repêchable au 2nd tour" -> "Second Tour"
+            for i in range(len(candidats)):
+                if candidats[i][7] == "Repêchable au 1er tour":
+                    candidats[i] = (*candidats[i][:7], "Admis Doffice")
+                elif candidats[i][7] == "Repêchable au 2nd tour":
+                    candidats[i] = (*candidats[i][:7], "Second Tour")
+
+            # Définition du tableau des candidats
+            data = [["N° Table", "Prénom", "Nom", "Sexe", "Points", "Statut"]]
+            for candidat in candidats:
+                data.append([
+                    str(candidat[0]), 
+                    candidat[1].capitalize(), 
+                    candidat[2].upper(),
+                    candidat[4].upper(), 
+                    str(candidat[6]), 
+                    candidat[7]
+                ])
+            
+            # Création du tableau
+            table = Table(data, colWidths=[3*cm, 4*cm, 4*cm, 2*cm, 3*cm, 4*cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            elements.append(Spacer(1, 20))  # Espace après le tableau
+
+            # Signatures (placées en bas de la page à gauche)
+            elements.append(Spacer(1, 50))  # Espace pour descendre les signatures
+            elements.append(Paragraph("<b>Signature du Président du Jury :</b> ______________________", styles['Normal']))
+            elements.append(Paragraph("<b>Signature de l'Inspecteur :</b> ______________________", styles['Normal']))
+
+            # Génération du PDF
+            doc.build(elements)
+
+            # Afficher un message de succès
+            QMessageBox.information(self, "Succès", "PV de Délibération enregistré avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+            
 #!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def print_candidats(self):
@@ -802,55 +898,7 @@ class StatistiquesPage(QWidget):
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label)
 
-        # Menu déroulant pour sélectionner les statistiques
-        self.statistiques_selection = QComboBox()
-        self.statistiques_selection.addItems(["Sélectionnez une statistique", "Taux de réussite", "Moyennes par matière", "Répartition des statuts"])
-        self.statistiques_selection.currentTextChanged.connect(self.update_statistics)
-        layout.addWidget(self.statistiques_selection)
-
-        # Bouton pour rafraîchir les statistiques
-        self.refresh_button = QPushButton("Rafraîchir")
-        self.refresh_button.clicked.connect(self.refresh_statistics)
-        layout.addWidget(self.refresh_button)
-
-        # Tableau pour afficher les statistiques
-        self.stats_table = QTableWidget()
-        self.stats_table.setColumnCount(5)  # Ajustez selon vos besoins
-        self.stats_table.setHorizontalHeaderLabels(["Statistique", "Valeur", "Description", "Date", "Commentaires"])
-        layout.addWidget(self.stats_table)
-
-        # Configuration du layout
         self.setLayout(layout)
-
-        # Chargement initial des statistiques
-        self.load_initial_statistics()
-
-    def load_initial_statistics(self):
-        """Charge les statistiques initiales dans le tableau."""
-        # Exemple de données, remplacez par vos données réelles
-        data = [
-            ["Taux de réussite", "85%", "Pourcentage d'admis", "2025", "Bon résultat"],
-            ["Moyenne générale", "14.5", "Moyenne des notes", "2025", "À améliorer"],
-        ]
-        
-        self.stats_table.setRowCount(len(data))
-        for row_idx, row_data in enumerate(data):
-            for col_idx, value in enumerate(row_data):
-                self.stats_table.setItem(row_idx, col_idx, QTableWidgetItem(str(value)))
-
-    def update_statistics(self):
-        """Met à jour les statistiques selon la sélection."""
-        selected_stat = self.statistiques_selection.currentText()
-        # Logique pour mettre à jour le tableau en fonction de la sélection
-        # Exemple : filtrer ou charger de nouvelles données
-        print(f"Selected statistic: {selected_stat}")
-    
-    def refresh_statistics(self):
-        """Rafraîchit les données des statistiques."""
-        # Logique pour rafraîchir les données
-        print("Refreshing statistics...")
-        self.load_initial_statistics()  # Recharge les données initiales
-
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::

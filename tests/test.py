@@ -2,10 +2,11 @@ import sqlite3
 import os, sys
 import pandas as pd
 
-from frontend.views import CandidatsPage
 
 # Ajouter le dossier parent au chemin pour importer backend
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from PyQt5.QtWidgets import QApplication
+from frontend.views import CandidatsPage,StatistiquesPage
 
 #from backend.database import get_all_candidats
 #from backend.function.calculenotes import calculer_statut_candidat
@@ -56,3 +57,19 @@ print(df.head()) """  # Afficher les 5 premières lignes
 """ print("📊 Colonnes détectées dans Excel :", df.columns.tolist())
 print(f"🔢 Nombre de colonnes dans Excel : {len(df.columns)}") """
 
+
+
+
+def main():
+    app = QApplication(sys.argv)  # Initialiser l'application Qt
+    window = StatistiquesPage()    # Créer une instance de la page statistiques
+    window.show()                   # Afficher la fenêtre
+
+    # Appeler des méthodes pour tester
+    window.refresh_statistics()     # Rafraîchir les statistiques
+    # Vous pouvez appeler d'autres méthodes ici pour les tester
+
+    sys.exit(app.exec_())           # Démarrer l'application
+
+if __name__ == "__main__":
+    main()
