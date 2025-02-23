@@ -108,7 +108,7 @@ QPushButton#searchButton:hover {
 }
 QTableWidget::item {
     padding: 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #fc89be;
 }
 QHeaderView::section {
     background-color: rgba(253, 114, 0, 0.808);
@@ -182,7 +182,7 @@ QPushButton[text="OK"] {
     padding: 8px 15px;
 }
 QPushButton[text="OK"]:hover {
-    background-color: rgba(253, 114, 0, 0.808);
+    background-color: rgba(124, 123, 123, 0.808);
 }
 
 

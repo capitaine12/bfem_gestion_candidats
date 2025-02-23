@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 from PyQt5.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, 
+    QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, QScrollArea,
     QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox, QGridLayout
     )
 
@@ -13,13 +13,17 @@ from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
-from PyQt5.QtGui import QPixmap, QColor
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QPixmap, QColor, QFont , QPalette,  QIcon
+
 import os,sys
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtCore import QThread, pyqtSignal
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
+from backend.function.calculenotes import calculer_statut_candidat, recalculer_tous_les_statuts
 from frontend.controllers import NavigationMenu  #? Import du menu de navigation
 from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut, get_all_jurys, get_all_notes #? Import de la base de données
 
@@ -1162,21 +1166,222 @@ class DeliberationPage(QWidget):
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE STATISTIQUE ::::::::::::::::::::::::::::::::::::::::
 
 class StatistiquesPage(QWidget):
-    """Page des statistiques."""
     def __init__(self):
         super().__init__()
         self.setObjectName("statistiquesPage")
-        
-        # Layout principal
+        self.initUI()
+    
+    def initUI(self):
         layout = QVBoxLayout()
-
-        # Titre de la page
-        label = QLabel("Statistiques des Candidats")
-        label.setObjectName("titlePage")
-        label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(label)
-
+        layout.setSpacing(15)  # Ajout d'espacement global
+        
+        # Titre principal
+        title = QLabel("📊 Statistiques des Candidats")
+        title.setFont(QFont("Arial", 20, QFont.Bold))
+        title.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title)
+        
+        # Conteneur pour les cartes statistiques
+        cards_layout = QHBoxLayout()
+        cards_layout.setSpacing(15)  # Espacement entre les cartes
+        
+        # Traiter les candidats et récupérer les données de la BDD
+        self.traiter_candidats(cards_layout)
+        
+        layout.addLayout(cards_layout)
+        
+        # Zone scrollable pour les graphiques
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        content_widget = QWidget()
+        content_layout = QVBoxLayout()
+        content_layout.setSpacing(20)  # Espacement entre les graphiques
+        
+        # Ajout des graphiques
+        self.add_graph(content_layout, "Répartition des Statuts", self.plot_pie_chart)
+        self.add_graph(content_layout, "Répartition des Candidats par Sexe", self.plot_bar_chart)
+        self.add_graph(content_layout, "Histogramme des Notes par Matière", self.plot_histogram)
+        
+        content_widget.setLayout(content_layout)
+        scroll_area.setWidget(content_widget)
+        layout.addWidget(scroll_area)
+        
         self.setLayout(layout)
+
+    def traiter_candidats(self, cards_layout):
+        """Traite tous les candidats : calcule les notes, met à jour les statuts et calcule la moyenne générale."""
+        candidats = get_all_candidats()  # Récupérer tous les candidats
+
+        # Étape 1 : Calculer et stocker les notes
+        for candidat in candidats:
+            num_table = candidat[0]
+            calculer_statut_candidat(num_table)  # Calcule et stocke les notes
+            
+
+        # Étape 2 : Recalculer tous les statuts
+        recalculer_tous_les_statuts()  # Met à jour tous les statuts après le calcul des notes
+        #candidats = get_all_candidats()  # Récupérer tous les candidats
+
+
+        # Étape 3 : Calculer les statistiques
+        total_candidats = len(candidats)
+        moyenne_generale = self.calculer_moyenne_generale(candidats)
+        taux_reussite = self.calculer_taux_reussite(candidats)
+        
+        self.add_stat_card(cards_layout, "📌 Candidats", str(total_candidats))
+        self.add_stat_card(cards_layout, "🎓 Moyenne Générale", f"{moyenne_generale:.2f}/20")
+        self.add_stat_card(cards_layout, "✅ Taux de Réussite", f"{taux_reussite:.2f}%")
+
+    def add_stat_card(self, layout, title, value):
+        """Ajoute une carte statistique avec icône et animation légère"""
+        card = QFrame()
+        card.setStyleSheet("""
+            QFrame {
+                border: 2px solid #ff6600;
+                border-radius: 10px;
+                padding: 15px;
+                background-color: #fff;
+            }
+        """)
+        card_layout = QVBoxLayout()
+        card_layout.setSpacing(5)
+        
+        label_title = QLabel(title)
+        label_title.setFont(QFont("Arial", 12, QFont.Bold))
+        label_title.setAlignment(Qt.AlignCenter)
+        
+        label_value = QLabel(value)
+        label_value.setFont(QFont("Arial", 22, QFont.Bold))  # Taille augmentée
+        label_value.setAlignment(Qt.AlignCenter)
+        
+        card_layout.addWidget(label_title)
+        card_layout.addWidget(label_value)
+        card.setLayout(card_layout)
+        layout.addWidget(card)
+    
+    def add_graph(self, layout, title, plot_function):
+        """Ajoute un graphique avec un titre souligné"""
+        title_label = QLabel(f"<u>{title}</u>")
+        title_label.setFont(QFont("Arial", 16, QFont.Bold))
+        title_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title_label)
+        
+        figure = plt.figure(figsize=(6, 4))  # Agrandissement du graphique
+        canvas = FigureCanvas(figure)
+        canvas.setFixedHeight(350)  # Fixe la hauteur des graphiques
+        
+        plot_function(figure)
+        layout.addWidget(canvas)
+
+    def calculer_moyenne_generale(self, candidats):
+        """Calcule la moyenne générale des candidats."""
+        total_moyenne = 0
+        total_candidats = len(candidats)
+        
+        for candidat in candidats:
+            notes = get_all_notes(candidat[0])  # Utilise le numéro de table pour récupérer les notes
+            if notes:
+                # Filtrer les notes non nulles
+                notes_valides = [note for note in notes if note is not None]
+                if notes_valides:  # Vérifie que la liste n'est pas vide
+                    moyenne = sum(notes_valides) / len(notes_valides)
+                    total_moyenne += moyenne
+        
+        return total_moyenne / total_candidats if total_candidats > 0 else 0
+
+    def calculer_taux_reussite(self, candidats):
+        """Calcule le taux de réussite des candidats."""
+        admis_count = sum(1 for candidat in candidats if candidat[-1] == "Admis Doffice")  # Assurez-vous que le statut est le bon
+        total_count = len(candidats)
+        return (admis_count / total_count * 100) if total_count > 0 else 0
+
+    def plot_pie_chart(self, figure):
+        """Diagramme circulaire pour la répartition des statuts"""
+        candidats_statut = get_candidats_avec_statut()
+        labels = ["Admis", "Repêchable au 1er tour", "Second Tour", "Repêchable au 1er tour", "Échoué"]
+        sizes = [
+            sum(1 for c in candidats_statut if c[-1] == "Admis Doffice"),
+            sum(1 for c in candidats_statut if c[-1] == "Repêchable au 1er tour"),
+            sum(1 for c in candidats_statut if c[-1] == "Second Tour"),
+            sum(1 for c in candidats_statut if c[-1] == "Repêchable au 2nd tour"),
+            sum(1 for c in candidats_statut if c[-1] == "Échoué")
+        ]
+        colors = ['#4CAF50','#16028a', '#FFC107', '#8b038b', '#F44336']
+        
+        ax = figure.add_subplot(111)
+        ax.pie(sizes, labels=labels, autopct='%2.1f%%', colors=colors, startangle=90)
+        ax.axis('equal')  
+    
+    def plot_bar_chart(self, figure):
+        """Diagramme en barres pour la répartition des sexes"""
+        candidats_statut = get_all_candidats()
+        labels = ['Hommes', 'Femmes']
+        values = [
+            sum(1 for c in candidats_statut if c[5] == 'M'),  # Compte des hommes
+            sum(1 for c in candidats_statut if c[5] == 'F')   # Compte des femmes
+        ]
+        
+        ax = figure.add_subplot(111)
+        ax.bar(labels, values, color=['#1E88E5', '#D81B60'])
+        ax.set_ylabel("Nombre de candidats")
+        ax.set_title("Répartition Hommes/Femmes", fontsize=12)
+        ax.grid(axis='y', linestyle='--', alpha=0.7)  # Ajout d'une grille
+    
+    def plot_histogram(self, figure):
+        """Histogramme des moyennes par matière"""
+        sujets = ['Français', 'TSQ','Dictée', 'Maths', 'SVT', 'Histoire', 'Anglais', 'Ang-Oral', 'PC / LV2', 'EPS', 'Ép-Facultative']
+        moyennes = [self.calculer_moyenne_par_matiere(sujet) for sujet in sujets]
+        
+        ax = figure.add_subplot(111)
+        bars = ax.bar(sujets, moyennes, color=['#3F51B5', '#FF9800', '#009688', '#E91E63', '#8BC34A', '#ff0000', '#01441bde', '#66625ece', '#fd80ba', '#1a3e44', '#030e70'])
+        
+        ax.set_ylabel("Moyenne des candidats")
+        ax.set_title("Moyenne par Matière", fontsize=12)
+        ax.grid(axis='y', linestyle='--', alpha=0.7)  # Ajout d'une grille
+
+        # Affichage des valeurs sur chaque barre
+        for bar in bars:
+            yval = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, yval + 0.3, f"{yval:.1f}", ha='center', fontsize=10, fontweight='bold')
+
+    def calculer_moyenne_par_matiere(self, sujet):
+        """Calcule la moyenne pour une matière donnée."""
+        candidats = get_all_candidats()
+        total = 0
+        count = 0
+        
+        # Mappage des matières aux notes dans la base de données
+        note_mapping = {
+            "Français": "note_cf",
+            "TSQ": "note_tsq",
+            "Dictée": "note_ort",
+            "Maths": "note_math",
+            "SVT": "note_svt",
+            "Histoire": "note_hg",
+            "Anglais": "note_ang1",
+            "Anglais Oral": "note_ang2",
+            "EPS": "note_eps",
+            "Épreuve Facultative": "note_ep_fac",
+            "PC / LV2": "note_pc_lv2"
+        }
+        
+        if sujet not in note_mapping:
+            logging.warning(f"❌ Matière non trouvée : {sujet}")
+            return 0  # Retourne 0 si la matière n'est pas reconnue
+
+        for candidat in candidats:
+            notes = get_all_notes(candidat[0])  # Utilise le numéro de table
+            if notes:
+                # Récupère le nom de la note correspondant à la matière
+                note_column = note_mapping[sujet]
+                index = ["note_cf", "note_ort", "note_tsq", "note_svt", "note_math", "note_hg", "note_pc_lv2", "note_ang1", "note_ang2", "note_eps", "note_ep_fac"].index(note_column)
+                note = notes[index]
+                if note is not None:
+                    total += note
+                    count += 1
+        
+        return total / count if count > 0 else 0
+
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: LABO DU FENETRE PRINCIPALE ::::::::::::::::::::::::::::::::::::::::

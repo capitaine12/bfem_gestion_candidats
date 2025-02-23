@@ -1,5 +1,6 @@
 import logging
-import os, sys
+import os
+import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from function.db_connection import get_db_connection
@@ -17,7 +18,7 @@ COEFFICIENTS = {
 def calculer_statut_candidat(num_table, conn=None):
     """ Calcule le statut du candidat en fonction de ses notes et de son historique d'examen """
     fermer_connexion = False
-    
+
     try:
         if conn is None:  # Si aucune connexion n'est fournie, on en ouvre une
             conn = get_db_connection()
@@ -35,28 +36,29 @@ def calculer_statut_candidat(num_table, conn=None):
             LEFT JOIN livret_scolaire l ON c.id = l.candidat_id
             WHERE c.num_table = ?
         """, (num_table,))
-        
+
         data = cursor.fetchone()
         if not data:
             logging.warning(f"❌ Aucune donnée trouvée pour le candidat {num_table} !")
             return "Non délibéré"
         logging.info(f"✅ Données trouvées pour {num_table}: {data}")
-        
-        # Extraction des valeurs et remplacement des None par 0
+
+        # Extraction des valeurs
         (moy_6e, moy_5e, moy_4e, moy_3e, 
         note_cf, note_ort, note_tsq, note_svt, 
         note_math, note_hg, note_pc_lv2, note_ang1, 
         note_ang2, note_eps, note_ep_fac, nb_fois) = data
 
-        # Remplacement des notes nulles par 0
+        # Créer une liste de notes
         notes = [
             moy_6e, moy_5e, moy_4e, moy_3e,
             note_cf, note_ort, note_tsq, note_svt,
             note_math, note_hg, note_pc_lv2, note_ang1,
             note_ang2, note_eps, note_ep_fac
         ]
-        
-        [note if note is not None else 0 for note in notes]
+
+        # Remplacer les None par 0
+        notes = [note if note is not None else 0 for note in notes]
 
         # Calcul du total des points
         total_points = (
@@ -80,13 +82,13 @@ def calculer_statut_candidat(num_table, conn=None):
             statut = "Second Tour"
         elif total_points < 153:
             statut = "Échoué"
-        
+
         # Règles de repêchage
         if total_points >= 171 and total_points < 180:
             statut = "Repêchable au 1er tour"
         elif total_points >= 144 and total_points < 153:
             statut = "Repêchable au 2nd tour"
-        
+
         # Insertion ou mise à jour dans la table de délibération
         cursor.execute("""
                 INSERT INTO deliberation (candidat_id, total_points, statut) 
@@ -96,7 +98,7 @@ def calculer_statut_candidat(num_table, conn=None):
 
         conn.commit()
         logging.info(f"🎯 Statut final : {statut} pour {num_table}")
-        
+
     except Exception as e:
         logging.error(f"❌ Erreur lors du calcul du statut pour {num_table} : {e}")
 
@@ -104,8 +106,6 @@ def calculer_statut_candidat(num_table, conn=None):
         if fermer_connexion:
             conn.close()
         
-
-#?::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 def recalculer_tous_les_statuts():
     """ Recalcule le statut de tous les candidats et met à jour la table délibération """

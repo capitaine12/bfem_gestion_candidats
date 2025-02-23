@@ -26,9 +26,10 @@ SELECT * FROM notes WHERE candidat_id = (SELECT id FROM candidats WHERE num_tabl
 SELECT * FROM deliberation WHERE candidat_id = (SELECT id FROM candidats WHERE num_table = 53);
 
 --:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-SELECT * FROM candidats;
+SELECT COUNT(*) FROM candidats WHERE sexe = 'M';
 SELECT COUNT(*) FROM notes;
 SELECT COUNT(*) FROM livret_scolaire;
+SELECT * FROM candidats;
 
 SELECT candidat_id,prenom, nom, num_table, total_points, statut FROM candidats c JOIN deliberation d ON c.id = d.candidat_id WHERE d.total_points >= 171;
 SELECT * FROM deliberation ;
