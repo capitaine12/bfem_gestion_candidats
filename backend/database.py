@@ -226,6 +226,36 @@ def get_all_candidats():
         conn.close()
     return candidats
 
+
+# recuperation des notes des candidats
+def get_all_notes(num_table):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+    except sqlite3.OperationalError as e:
+        logging.warning(f"⚠️ Base de données verrouillée : {e}")
+        return None  # Retourne None en cas d'erreur de connexion
+    
+    try:
+        # Requête SQL pour récupérer les notes en fonction du numéro de table
+        cursor.execute("""
+            SELECT n.moy_6e, n.moy_5e, n.moy_4e, n.moy_3e, n.note_eps,
+                   n.note_cf, n.note_ort, n.note_tsq, n.note_svt, n.note_ang1,
+                   n.note_math, n.note_hg, n.note_ic, n.note_pc_lv2, n.note_ang2,
+                   n.note_ep_fac
+            FROM candidats c
+            LEFT JOIN notes n ON c.id = n.candidat_id
+            WHERE c.num_table = ?
+        """, (num_table,))
+        
+        notes = cursor.fetchone()  # Récupère une seule ligne correspondant au `num_table`
+        return notes  # Retourne les notes sous forme de tuple ou None si rien n'est trouvé
+    except sqlite3.Error as e:
+        logging.error(f"Erreur lors de l'exécution de la requête : {e}")
+        return None  # Retourne None en cas d'erreur SQL
+    finally:
+        conn.close()
+
 # recuperation de candidat avec son status
 def get_candidats_avec_statut():
     """ Récupère tous les candidats avec leur statut de délibération """
@@ -243,34 +273,6 @@ def get_candidats_avec_statut():
     candidats = cursor.fetchall()
     conn.close()
     return candidats
-
-
-# recuperation des notes des candidats
-def get_all_notes():
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-    except sqlite3.OperationalError as e:
-        logging.warning(f"⚠️ Base de données verrouillée : {e}")
-        return
-    
-    cursor.execute("""
-        SELECT c.num_table, n.moy_6e, n.moy_5e, n.moy_4e, n.moy_3e, n.note_eps,
-               n.note_cf, n.note_ort, n.note_tsq, n.note_svt, n.note_ang1, 
-               n.note_math, n.note_hg, n.note_ic, n.note_pc_lv2, n.note_ang2, 
-               n.note_ep_fac,
-               (n.moy_6e + n.moy_5e + n.moy_4e + n.moy_3e + n.note_eps +
-                n.note_cf + n.note_ort + n.note_tsq + n.note_svt +
-                n.note_ang1 + n.note_math + n.note_hg + n.note_ic + 
-                n.note_pc_lv2 + n.note_ang2 + n.note_ep_fac) AS total_points
-        FROM candidats c
-        LEFT JOIN notes n ON c.id = n.candidat_id
-    """)
-    
-    notes = cursor.fetchall()
-    conn.close()
-    return notes
 
 
 def get_all_jurys():

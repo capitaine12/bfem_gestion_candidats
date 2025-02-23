@@ -12,7 +12,6 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-import matplotlib.pyplot as plt
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
 from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtGui import QIcon
@@ -20,8 +19,10 @@ import os,sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+
 from frontend.controllers import NavigationMenu  #? Import du menu de navigation
-from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut, get_all_jurys  #? Import de la base de données
+from backend.database import delete_candidat, get_all_candidats, get_candidats_avec_statut, get_all_jurys, get_all_notes #? Import de la base de données
+
 
 from frontend.partials.form import CandidatForm  #? Import du formulaire d'ajout / modification
 from frontend.partials.ia_data import ia_info  #? Importation des données du fichier ia_data
@@ -87,9 +88,6 @@ class DashboardPage(QWidget):
         cards_window = CardsWindow()
         cards_window.exec_()  # Affiche la fenêtre modale
 
-        #def resizeEvent(self, event):
-            #"""Ajuste l'image de fond lorsque la fenêtre est redimensionnée."""
-            #self.background_label.setGeometry(0, 0, self.width(), self.height())
 
 
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
@@ -346,9 +344,8 @@ def get_resultats():
     except sqlite3.Error as e:
         logging.warning(f"❌ Erreur lors de l'accès à la base de données : {e}")
         return []
-""" resultats = get_resultats()  # Fonction pour récupérer les résultats
-pv = generer_pv(resultats)
-print(pv) """
+
+
 class DeliberationPage(QWidget):
     """ Page pour la délibération """
     def __init__(self):
@@ -408,12 +405,12 @@ class DeliberationPage(QWidget):
         self.btn_print_anonymat.clicked.connect(self.imprimer_liste_anonymat)
         self.btn_print_resultats.clicked.connect(self.imprimer_liste_resultats)
         self.btn_print_pv.clicked.connect(self.imprimer_pv_deliberation)
-        self.btn_print_releve_1.clicked.connect(self.print_releve_1)
-        self.btn_print_releve_2.clicked.connect(self.print_releve_2)
+        self.btn_print_releve_1.clicked.connect(self.imprimer_releve_notes_pt)
+        self.btn_print_releve_2.clicked.connect(self.imprimer_releve_notes)
 
         # Menu déroulant pour filtrer les résultats
         self.filtre_statut = QComboBox()
-        self.filtre_statut.addItems(["Tous", "Admis", "Second Tour", "Repêchable au 1er tour",
+        self.filtre_statut.addItems(["Tous", "Admis Doffice", "Second Tour", "Repêchable au 1er tour",
                                      "Repêchable au 2nd tour", "Échoué"])
         self.filtre_statut.currentTextChanged.connect(self.filtrer_par_statut)
         layout.addWidget(self.filtre_statut)
@@ -449,7 +446,7 @@ class DeliberationPage(QWidget):
                 
                 # Appliquer une couleur de fond selon le statut
                 if col_idx == 7:  # Colonne Statut
-                    if data == "Admis":
+                    if data == "Admis Doffice":
                         item.setBackground(QColor(0, 255, 0))
                     elif data == "Second Tour":
                         item.setBackground(QColor(255, 255, 0)) 
@@ -474,7 +471,7 @@ class DeliberationPage(QWidget):
                 # Appliquer le style de fond au statut
                 if col_idx == 7:  # Colonne du statut
                     statut = str(data)
-                    if statut == "Admis":
+                    if statut == "Admis Doffice":
                         item.setBackground(QColor(0, 255, 0))
                     elif statut == "Second Tour":
                         item.setBackground(QColor(255, 255, 0)) 
@@ -777,7 +774,7 @@ class DeliberationPage(QWidget):
             elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
 
             # Titre du PV
-            elements.append(Paragraph("<b>PROCÈS-VERBAL DE DÉLIBÉRATION</b>", styles['Title']))
+            elements.append(Paragraph("<b>PROCÈS-VERBAL DE DÉLIBÉRATION 1er TOUR </b>", styles['Title']))
             elements.append(Spacer(1, 10)) 
 
             # Date actuelle
@@ -789,13 +786,14 @@ class DeliberationPage(QWidget):
             if jury_info:
                 jury = jury_info[0]  # On prend le premier jury
                 jury_text = f"""
-                    <b>IA :</b> {jury[1]}<br/>
-                    <b>Localité :</b> {jury[3]}<br/>
-                    <b>Centre d'examen :</b> {jury[4]}<br/>
+                    <b>IA :</b> {jury[2]}<br/>
+                    <b>IEF :</b> {jury[3]}<br/>
+                    <b>Localité :</b> {jury[4]}<br/>
+                    <b>Centre d'examen :</b> {jury[5]}<br/>
                     <b>Saison :</b> 2024/2025<br/>
-                    <b>Président du Jury :</b> {jury[5]}<br/>
-                    <b>N° Jury :</b> {jury[0]}<br/>
-                    <b>Examinateurs :</b> M. Diallo, Mme Ba, M. Ndiaye
+                    <b>Président du Jury :</b> {jury[6]}<br/>
+                    <b>N° Jury :</b> {jury[1]}<br/>
+                    <b>Examinateurs :</b> Mlle. Diagne, Mlle Diarisso, M. Diop
                 """
                 elements.append(Paragraph(jury_text, styles['Normal']))
                 elements.append(Spacer(1, 10))
@@ -857,6 +855,286 @@ class DeliberationPage(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
             
+#?:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+    def imprimer_releve_notes_pt(self):
+        """ Imprime le relevé de notes du candidat sélectionné """
+        selected_row = self.table.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Avertissement", "Veuillez sélectionner un candidat.")
+            return  
+        
+        num_table = self.table.item(selected_row, 0).text()
+        candidats = get_all_candidats()
+        notes = get_all_notes(num_table)  # Passer num_table pour récupérer les notes
+        jurys = get_all_jurys()
+        
+        # Trouver les informations du candidat
+
+        candidat_info = next((c for c in candidats if str(c[0]) == num_table), None)
+
+        if not candidat_info or notes is None or len(notes) == 0:
+            QMessageBox.critical(self, "Erreur", "Impossible de récupérer les informations du candidat ou ses notes.")
+            return  
+        
+        statut = candidat_info[-1]  # Dernière colonne contient le statut
+        if statut not in ["Admis Doffice", "Repêchable au 1er tour"]:
+            QMessageBox.warning(self, "Accès refusé", "Ce candidat n'est pas admis ou repêché au 1er tour.")
+            return
+         
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer le relevé de notes", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  
+        
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
+
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+            
+            elements.append(logo_table)
+            elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
+
+            # Titre du Relevé
+            elements.append(Paragraph("<b>RELEVÉ DE NOTES - 1er TOUR</b>", styles['Title']))
+            elements.append(Spacer(1, 10)) 
+
+            # Récupération des informations du jury
+            jury_info = get_all_jurys()
+            if jury_info:
+                jury = jury_info[0]  # On prend le premier jury
+                jury_text = f"""
+                    <b>Centre d'examen :</b> {jury[4]}<br/>
+                    <b>Localité :</b> {jury[3]}<br/>
+                    <b>Saison :</b> 2024/2025<br/>
+                """
+                elements.append(Paragraph(jury_text, styles['Normal']))
+                elements.append(Spacer(1, 10))
+
+            # Infos candidat
+            date_naissance_formatee = datetime.strptime(candidat_info[3], "%Y-%m-%d").strftime("%d/%m/%Y")
+            elements.append(Paragraph(f"Numéro de table : {candidat_info[0]}", styles['Normal']))
+            elements.append(Paragraph(f"Nom & Prénom : {candidat_info[2].upper()} {candidat_info[1].capitalize()}", styles['Normal']))
+            elements.append(Paragraph(f"Sexe : {candidat_info[5]}", styles['Normal']))
+            elements.append(Paragraph(f"Né(e) : Le {date_naissance_formatee} à {candidat_info[4]}", styles['Normal']))
+            elements.append(Paragraph("\n"))
+            
+            # Récupération et affichage du statut
+            statut = candidat_info[-1]  # Dernière colonne contient le statut
+            elements.append(Paragraph(f"<b>Statut :</b> {statut}", styles['Normal']))
+            elements.append(Paragraph("\n"))
+
+            elements.append(Spacer(1, 20)) 
+            # Tableau des notes
+            data = [["Matières", "Coef", "Note Obtenue"]]
+            coefficients = {
+                "note_cf": 2, "note_ort": 1, "note_tsq": 1, "note_svt": 2,
+                "note_math": 4, "note_hg": 2, "note_pc_lv2": 2, "note_ang1": 2,
+                "note_ang2": 1, "note_eps": 1, "note_ep_fac": 1
+            }
+            
+            total_points = 0
+            total_coef = 0
+            
+            for matiere, coef in coefficients.items():
+                note = notes[list(coefficients.keys()).index(matiere)]  # Récupérer la note par rapport à la clé
+                data.append([matiere, coef, note if note is not None else "-"])  # Afficher "-" si la note est None
+                if note is not None:
+                    total_points += note * coef
+                    total_coef += coef
+            
+            moyenne = round(total_points / 20, 2) if total_coef > 0 else 0  # Calcul de la moyenne générale
+            
+            table = Table(data, colWidths=[6*cm, 2*cm, 4*cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+            
+            elements.append(table)
+            elements.append(Spacer(1, 20)) 
+            elements.append(Paragraph("\n"))
+            elements.append(Paragraph(f"Total des points : {total_points} / {total_coef * 20}", styles['Normal']))
+            elements.append(Paragraph(f"Moyenne Générale : {moyenne} / 20", styles['Normal']))
+            
+            # Décision finale
+            elements.append(Paragraph(f"<b>Décision :</b> <b>{statut}</b>", styles['Normal']))
+            elements.append(Spacer(1, 1*cm))
+            elements.append(Paragraph("Signature du Président du Jury: ______________________", styles['Normal']))
+            elements.append(Paragraph("Signature de l'Inspecteur: ______________________", styles['Normal']))
+            
+            doc.build(elements)
+            QMessageBox.information(self, "Succès", "Relevé de notes enregistré avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+            
+            
+#!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    def imprimer_releve_notes(self):
+            """ Imprime le relevé de notes du candidat sélectionné """
+            selected_row = self.table.currentRow()
+            if selected_row == -1:
+                QMessageBox.warning(self, "Avertissement", "Veuillez sélectionner un candidat.")
+                return  
+            
+            num_table = self.table.item(selected_row, 0).text()
+            candidats = get_all_candidats()
+            notes = get_all_notes(num_table)  # Passer num_table pour récupérer les notes
+            jurys = get_all_jurys()
+            
+            # Trouver les informations du candidat
+
+            candidat_info = next((c for c in candidats if str(c[0]) == num_table), None)
+
+            if not candidat_info or notes is None or len(notes) == 0:
+                QMessageBox.critical(self, "Erreur", "Impossible de récupérer les informations du candidat ou ses notes.")
+                return  
+            
+            statut = candidat_info[-1]  # Dernière colonne contient le statut
+            if statut not in ["Second Tour", "Repêchable au 2nd tour"]:
+                QMessageBox.warning(self, "Accès refusé", "Ce candidat n'est pas admis ou repêché au 2nd tour.")
+                return
+            
+            options = QFileDialog.Options()
+            file_path, _ = QFileDialog.getSaveFileName(
+                self, "Enregistrer le relevé de notes", "", "PDF Files (*.pdf);;All Files (*)", options=options
+            )
+
+            if not file_path:
+                return  
+            
+            try:
+                doc = SimpleDocTemplate(file_path, pagesize=A4)
+                elements = []
+                styles = getSampleStyleSheet()
+
+                # Images : Drapeau et Logo
+                drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+                logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
+
+                # En-tête officiel
+                header_text = """<para align=center>
+                <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+                Un Peuple - Un But - Une Foi<br/>
+                <b>Ministère de l'Éducation nationale</b><br/><br/>
+                </para>"""
+
+                # Tableau pour le logo, le texte et le drapeau
+                logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+                logo_table.setStyle(TableStyle([
+                    ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                    ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                    ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                    ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+                ]))
+                
+                elements.append(logo_table)
+                elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
+
+                # Titre du Relevé
+                elements.append(Paragraph("<b>RELEVÉ DE NOTES - 1er TOUR</b>", styles['Title']))
+                elements.append(Spacer(1, 10)) 
+
+                # Récupération des informations du jury
+                jury_info = get_all_jurys()
+                if jury_info:
+                    jury = jury_info[0]  # On prend le premier jury
+                    jury_text = f"""
+                        <b>Centre d'examen :</b> {jury[4]}<br/>
+                        <b>Localité :</b> {jury[3]}<br/>
+                        <b>Saison :</b> 2024/2025<br/>
+                    """
+                    elements.append(Paragraph(jury_text, styles['Normal']))
+                    elements.append(Spacer(1, 10))
+
+                # Infos candidat
+                date_naissance_formatee = datetime.strptime(candidat_info[3], "%Y-%m-%d").strftime("%d/%m/%Y")
+                elements.append(Paragraph(f"Numéro de table : {candidat_info[0]}", styles['Normal']))
+                elements.append(Paragraph(f"Nom & Prénom : {candidat_info[2].upper()} {candidat_info[1].capitalize()}", styles['Normal']))
+                elements.append(Paragraph(f"Sexe : {candidat_info[5]}", styles['Normal']))
+                elements.append(Paragraph(f"Né(e) : Le {date_naissance_formatee} à {candidat_info[4]}", styles['Normal']))
+                elements.append(Paragraph("\n"))
+                
+                # Récupération et affichage du statut
+                statut = candidat_info[-1]  # Dernière colonne contient le statut
+                elements.append(Paragraph(f"<b>Statut :</b> {statut}", styles['Normal']))
+                elements.append(Paragraph("\n"))
+
+                elements.append(Spacer(1, 20)) 
+                # Tableau des notes
+                data = [["Matières", "Coef", "Note Obtenue"]]
+                coefficients = {
+                    "note_cf": 2, "note_ort": 1, "note_tsq": 1, "note_svt": 2,
+                    "note_math": 4, "note_hg": 2, "note_pc_lv2": 2, "note_ang1": 2,
+                    "note_ang2": 1, "note_eps": 1, "note_ep_fac": 1
+                }
+                
+                total_points = 0
+                total_coef = 0
+                
+                for matiere, coef in coefficients.items():
+                    note = notes[list(coefficients.keys()).index(matiere)]  # Récupérer la note par rapport à la clé
+                    data.append([matiere, coef, note if note is not None else "-"])  # Afficher "-" si la note est None
+                    if note is not None:
+                        total_points += note * coef
+                        total_coef += coef
+                
+                moyenne = round(total_points / 20, 2) if total_coef > 0 else 0  # Calcul de la moyenne générale
+                
+                table = Table(data, colWidths=[6*cm, 2*cm, 4*cm])
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+                ]))
+                
+                elements.append(table)
+                elements.append(Spacer(1, 20)) 
+                elements.append(Paragraph("\n"))
+                elements.append(Paragraph(f"Total des points : {total_points} / {total_coef * 20}", styles['Normal']))
+                elements.append(Paragraph(f"Moyenne Générale : {moyenne} / 20", styles['Normal']))
+                
+                # Décision finale
+                elements.append(Paragraph(f"<b>Décision :</b> <b>{statut}</b>", styles['Normal']))
+                elements.append(Spacer(1, 1*cm))
+                elements.append(Paragraph("Signature du Président du Jury: ______________________", styles['Normal']))
+                elements.append(Paragraph("Signature de l'Inspecteur: ______________________", styles['Normal']))
+                
+                doc.build(elements)
+                QMessageBox.information(self, "Succès", "Relevé de notes enregistré avec succès !")
+
+            except Exception as e:
+                QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
 #!:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def print_candidats(self):

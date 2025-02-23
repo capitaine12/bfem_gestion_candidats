@@ -7,8 +7,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from backend.function.db_connection import get_db_connection
 from backend.function.calculenotes import calculer_statut_candidat
-from frontend.views import DeliberationPage
-from frontend.views import MainWindow
+#from frontend.views import DeliberationPage
+#from frontend.views import MainWindow
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
