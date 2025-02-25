@@ -258,7 +258,7 @@ class CandidatForm(QDialog):
                 QMessageBox.warning(self, "Erreur", "La date de naissance ne peut pas être dans le futur.")
                 return
 
-            if age < 10 or age > 30:
+            if age < 13 or age > 30:
                 self.mark_invalid_field(self.date_naissance_input, True)
                 QMessageBox.warning(self, "Erreur", "L'âge du candidat doit être compris entre 10 et 30 ans.")
                 return

@@ -13,12 +13,12 @@ from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from PyQt5.QtCore import Qt, QPropertyAnimation, pyqtSignal
-from PyQt5.QtGui import QPixmap, QColor, QFont , QPalette,  QIcon
+from PyQt5.QtGui import QPixmap, QColor, QFont,  QIcon
 
 import os,sys
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
