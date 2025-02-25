@@ -1325,9 +1325,8 @@ class StatistiquesPage(QWidget):
 
         # Équilibrer le graphique
         ax.axis('equal')  
-
         # Titre du graphique
-        ax.set_title("Répartition des Statuts des Candidats", fontsize=16, fontweight='bold')
+        ax.set_title("Répartition des Statuts des Candidats", fontsize=12)
 
         # Améliorer la lisibilité des étiquettes
         for text in texts:
