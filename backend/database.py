@@ -487,7 +487,7 @@ def ajouter_jury(num_jury, ia_region, ief_departement, localite, centre_examen, 
         conn.close()
 
 jury_info = [
-    ("JURY001", "IA DAKAR", "IEF Dakar Plateau", "Dakar", "Lycée Blaise Diagne", "Mamadou Diop", "+221 77 123 45 67", "jury.dakar@example.com", "JURYDKR2024"),
+    ("JURY001", "IA DAKAR", "IEF Dakar Plateau", "Dakar", "Lycée Blaise Diagne", "M. Massour Diouf", "+221 77 123 45 67", "jury.dakar@example.com", "JURYDKR2024"),
     ("JURY002", "IA THIÈS", "IEF Thiès Nord", "Thiès", "Collège Malick Sy", "Aissatou Ndiaye", "+221 76 987 65 43", "jury.thies@example.com", "JURYTHIES2024"),
     ("JURY003", "IA SAINT-LOUIS", "IEF Saint-Louis", "Saint-Louis", "Lycée Cheikh Oumar Foutiyou Tall", "Boubacar Faye", "+221 78 654 32 10", "jury.saintlouis@example.com", "JURYSL2024"),
     ("JURY004", "IA KAFFRINE", "IEF Kaffrine", "Kaffrine", "CEM Kaffrine", "Fatou Diouf", "+221 70 123 45 67", "jury.kaffrine@example.com", "JURYKAFF2024")

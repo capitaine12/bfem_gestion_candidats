@@ -43,10 +43,11 @@ QComboBox#champ_input {
     border: 1px solid rgb(255, 123, 0);
     border-radius: 15px;
     background-color: white;
+    
 }
 QLineEdit#champ_input:focus,
 QComboBox#champ_input:focus {
-    border-color: rgb(255, 123, 0);
+    border-color: rgb(0, 17, 255);
     outline: none;
 }
 

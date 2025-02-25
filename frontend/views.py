@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 from PyQt5.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, QScrollArea,
+    QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QHBoxLayout, QTableWidget, QScrollArea, QSpacerItem,
     QTableWidgetItem, QLineEdit, QPushButton,QHBoxLayout, QMessageBox, QSizePolicy, QFrame,QComboBox, QGridLayout
     )
 
@@ -50,50 +50,86 @@ def animate_button(button):
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE ACCUEIL ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE ACCUEIL ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE ACCUEIL ::::::::::::::::::::::::::::::::::::::::
-
 class DashboardPage(QWidget):
     """Page d'accueil du tableau de bord."""
+
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout()
-        #?label = QLabel("Bienvenue sur le Dashboard")
+
+        # Définir l'objet de la page
         self.setObjectName("dashboardPage")
-        
 
-        # QLabel pour l'image de fond
+        # Création du QLabel pour l'image de fond
         self.background_label = QLabel(self)
-        self.background_label.setPixmap(QPixmap("frontend/images/img.png"))
-        self.background_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        """ self.setStyleSheet(
-                           "background-repeat: no-repeat;"
-                           "background-position: center bottom;"
-                           "background-color: rgba(255, 255, 255, 0.575);"
-                           "border-radius: 5px;") """
-        layout = QVBoxLayout()
-        label = QLabel("Bienvenue sur le Dashboard")
-        label.setObjectName("titlePage")
-        label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(label)
-        layout.addWidget(self.background_label)
-        
-        # Bouton pour ouvrir la fenêtre des cartes
-        button_layout = QHBoxLayout() 
-        cards_button = QPushButton("Les Inspections Académiques")
-        cards_button.setObjectName("showCardsButton")  # Ajout d'un ID pour le bouton
-        cards_button.setFixedSize(300, 40)
-        cards_button.clicked.connect(self.open_cards_window)
-        button_layout.addWidget(cards_button, alignment=Qt.AlignRight)
-        layout.addWidget(cards_button)
+        self.background_label.setObjectName("backgroundImage")
+        self.background_label.setScaledContents(True)  # Permet au QLabel de s'étendre automatiquement
+        self.background_label.setPixmap(QPixmap("frontend/images/logbfem.png"))
+        self.background_label.setAlignment(Qt.AlignCenter)
 
+        # Création du layout principal
+        layout = QVBoxLayout(self)
+
+        # Message de bienvenue en haut
+        welcome_label = QLabel("BIENVENUE SUR LA PLATFORME")
+        welcome_label.setObjectName("welcomeTitle")
+        welcome_label.setAlignment(Qt.AlignCenter)
+
+        # Bouton pour ouvrir la fenêtre des cartes
+        cards_button = QPushButton("Les Inspections Académiques")
+        cards_button.setObjectName("showCardsButton")
+        cards_button.setFixedSize(400, 120)
+        cards_button.clicked.connect(self.open_cards_window)
+
+        # Ajout des widgets au layout
+        layout.addWidget(welcome_label, alignment=Qt.AlignTop)  # Texte en haut
+        layout.addSpacerItem(QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Expanding))  # Espace flexible
+        layout.addWidget(cards_button, alignment=Qt.AlignCenter)  # Bouton en bas
+
+        # Appliquer le layout à la page
         self.setLayout(layout)
+
+        # Appliquer le style (y compris image de fond couvrant la page)
+        self.setStyleSheet("""
+            #dashboardPage {
+                border-radius: 10px;
+            }
+            #backgroundImage {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                
+            }
+            #welcomeTitle {
+                font-size: 30px;
+                font-weight: bold;
+                color: #fff;
+                margin: 20px 0;
+                
+            }
+            #showCardsButton {
+                background-color: white;
+                color: rgb(2, 10, 122);
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                padding: 10px;
+                
+            }
+            #showCardsButton:hover {
+                background-color: #2980B9;
+            }
+        """)
+
+    def resizeEvent(self, event):
+        """Réajuste l'image de fond lorsque la fenêtre est redimensionnée."""
+        self.background_label.resize(self.size())  # Étendre l'image à toute la fenêtre
 
     def open_cards_window(self):
         """Ouvre la fenêtre des cartes."""
-        cards_window = CardsWindow()
-        cards_window.exec_()  # Affiche la fenêtre modale
-
-
-
+        # Remplacez cette partie par votre implémentation réelle
+        print("Fenêtre des cartes ouverte")
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
@@ -1198,7 +1234,7 @@ class StatistiquesPage(QWidget):
         content_layout.setSpacing(20)  # Espacement entre les graphiques
         
         # Ajout des graphiques
-        self.add_graph(content_layout, "Répartition des Statuts", self.plot_pie_chart)
+        self.add_graph(content_layout, "Répartition des Candidats par Statuts", self.plot_pie_chart)
         self.add_graph(content_layout, "Répartition des Candidats par Sexe", self.plot_bar_chart)
         self.add_graph(content_layout, "Histogramme des Notes par Matière", self.plot_histogram)
         self.add_graph(content_layout, "Nombre de Sexe par Statut", self.plot_sexe_par_statut)
@@ -1326,7 +1362,7 @@ class StatistiquesPage(QWidget):
         # Équilibrer le graphique
         ax.axis('equal')  
         # Titre du graphique
-        ax.set_title("Répartition des Statuts des Candidats", fontsize=12)
+       # ax.set_title("Répartition des Statuts des Candidats", fontsize=12)
 
         # Améliorer la lisibilité des étiquettes
         for text in texts:
@@ -1399,10 +1435,6 @@ class StatistiquesPage(QWidget):
         for bar in bars1 + bars2:
             yval = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2, yval + 0.3, f"{yval}", ha='center', fontsize=10, fontweight='bold')
-
-    
-
-
 
 
     def calculer_moyenne_par_matiere(self, sujet):
