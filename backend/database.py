@@ -249,12 +249,15 @@ def get_all_notes(num_table):
         """, (num_table,))
         
         notes = cursor.fetchone()  # Récupère une seule ligne correspondant au `num_table`
-        return notes  # Retourne les notes sous forme de tuple ou None si rien n'est trouvé
+        return notes if notes else tuple([None] * 16)  # Retourne un tuple de 16 valeurs `None` si aucune note n'est trouvée
+
     except sqlite3.Error as e:
         logging.error(f"Erreur lors de l'exécution de la requête : {e}")
-        return None  # Retourne None en cas d'erreur SQL
+        return tuple([None] * 16)  # En cas d'erreur, retourne aussi un tuple de `None`
+
     finally:
         conn.close()
+
 
 # recuperation de candidat avec son status
 def get_candidats_avec_statut():
@@ -286,6 +289,30 @@ def get_all_jurys():
     conn.close()
     return jurys
 
+
+def get_candidats_second_tour():
+    """ Récupère les candidats qui passent au second tour ou qui sont repêchés """
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT c.num_table, c.prenom, c.nom, d.total_points, d.statut
+            FROM candidats c
+            JOIN deliberation d ON c.id = d.candidat_id 
+            WHERE d.statut IN ('Admis Doffice', 'Repêchable au 1er tour', 'Second Tour', 'Repêchable au 2nd tour')
+            AND d.total_points >= 153
+            ORDER BY d.total_points DESC
+        """)
+
+        candidats = cursor.fetchall()
+        return candidats
+
+    except sqlite3.Error as e:
+        logging.error(f"❌ Erreur lors de la récupération des candidats au second tour : {e}")
+        return []
+    finally:
+        conn.close()
 
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::
 #?::::::::::::::::::::::::::::::::::::::::::::::::::: LES FONCTIONS D'AJOUT BD :::::::::::::::::::::::::::::::::::::::::::::::::::

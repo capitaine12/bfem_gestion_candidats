@@ -2,17 +2,17 @@ from PyQt5.QtWidgets import (
     QDialog, QLabel, QLineEdit, QPushButton, QHBoxLayout, QMessageBox, QGridLayout
 )
 from PyQt5.QtCore import Qt
-from backend.database import add_notes, update_notes  
+from backend.database import add_notes, update_notes, get_all_notes  
 
 class NotesForm(QDialog):
-    """ Fenêtre pour modifier les notes d’un candidat """
-    def __init__(self, parent=None, num_table=None, notes=None):
+    """ Fenêtre pour ajouter/modifier les notes d’un candidat """
+    def __init__(self, parent=None, num_table=None, mode="ajout"):
         super().__init__(parent)
-        self.setWindowTitle(f"Modifier Notes - Candidat {num_table}")
+        self.setWindowTitle(f"{'Modifier' if mode == 'modification' else 'Ajouter'} Notes - Candidat {num_table}")
         self.setFixedSize(620, 350)
 
         self.num_table = num_table
-        self.is_editing = notes is not None  # Vérifie si on modifie une note
+        self.mode = mode  # Stocker le mode (ajout/modification)
 
         # Appliquer un style
         self.setStyleSheet("""
@@ -22,7 +22,6 @@ class NotesForm(QDialog):
             border: 1px solid rgb(255, 123, 0);
             border-radius: 15px;
             background-color: white;
-                           
         }
         QLineEdit:focus {
             border-color: rgb(255, 123, 0);
@@ -51,7 +50,7 @@ class NotesForm(QDialog):
             field.setFixedHeight(30)
             layout.addWidget(field, row, col + 1)
 
-            self.fields[key] = field
+            self.fields[key] = field  # Stocke le champ avec sa clé correcte
 
             col += 2
             if col >= 4:
@@ -72,14 +71,21 @@ class NotesForm(QDialog):
         layout.addLayout(btn_layout, row + 2, 0, 1, 4)
         self.setLayout(layout)
 
-        # Pré-remplir les champs si on modifie une note
-        if self.is_editing:
-            for key, valeur in notes.items():
-                self.fields[key].setText(str(valeur))
+        # Si on est en mode modification, pré-remplir les champs
+        if mode == "modification":
+            self.prefill_fields()
 
         # Connexion des boutons
         self.btn_save.clicked.connect(self.save_notes)
         self.btn_cancel.clicked.connect(self.close)
+
+    def prefill_fields(self):
+        """ Pré-remplit les champs avec les notes existantes """
+        notes_existantes = get_all_notes(self.num_table)
+        if notes_existantes:
+            for key, valeur in zip(self.labels.values(), notes_existantes):
+                if valeur is not None:
+                    self.fields[key].setText(str(valeur))
 
     def mark_invalid_field(self, field, is_invalid):
         """ Ajoute ou enlève la couleur rouge aux champs ayant une erreur """
@@ -92,38 +98,34 @@ class NotesForm(QDialog):
         """ Enregistre les nouvelles notes en vérifiant les valeurs """
         notes = {}
         has_error = False
-        all_empty = True
 
-        for label, field in self.fields.items():
+        for key, field in self.fields.items():
             note = field.text().strip()
 
-            # Vérification si le champ est vide
+            # Vérification si le champ est vide → Désormais tous les champs doivent être remplis !
             if not note:
                 self.mark_invalid_field(field, True)
                 has_error = True
             else:
-                all_empty = False  # Au moins un champ est rempli
-
                 # Vérification du format de la note (chiffre entre 0 et 20)
-                if not note.replace('.', '', 1).isdigit() or float(note) < 0 or float(note) > 20:
-                    self.mark_invalid_field(field, True)
-                    QMessageBox.warning(self, "Erreur", f"La note de {label} doit être entre 0 et 20.")
-                    has_error = True
-                else:
+                try:
+                    note_float = float(note)
+                    if note_float < 0 or note_float > 20:
+                        raise ValueError
                     self.mark_invalid_field(field, False)
-                    notes[self.labels[label]] = float(note)
+                    notes[key] = note_float  # Stocker la note validée
+                except ValueError:
+                    self.mark_invalid_field(field, True)
+                    QMessageBox.warning(self, "Erreur", f"La note de {key} doit être un chiffre entre 0 et 20.")
+                    has_error = True
 
-        # Empêcher l'enregistrement si tous les champs sont vides
-        if all_empty:
-            QMessageBox.warning(self, "Erreur", "Vous devez remplir au moins un champ.")
-            return
-
-        # Si une erreur est détectée, ne pas enregistrer
+        # Empêcher l'enregistrement si tous les champs ne sont pas remplis
         if has_error:
+            QMessageBox.warning(self, "Erreur", "Tous les champs doivent être remplis correctement avant d'enregistrer.")
             return
 
         # Enregistrement dans la base de données
-        if self.is_editing:
+        if self.mode == "modification":
             update_notes(self.num_table, notes)
         else:
             add_notes(self.num_table, notes)

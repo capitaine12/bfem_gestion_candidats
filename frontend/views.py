@@ -932,8 +932,8 @@ class DeliberationPage(QWidget):
             if jury_info:
                 jury = jury_info[0]  # On prend le premier jury
                 jury_text = f"""
-                    <b>Centre d'examen :</b> {jury[4]}<br/>
-                    <b>Localité :</b> {jury[3]}<br/>
+                    <b>Centre d'examen :</b> {jury[5]}<br/>
+                    <b>Localité :</b> {jury[4]}<br/>
                     <b>Saison :</b> 2024/2025<br/>
                 """
                 elements.append(Paragraph(jury_text, styles['Normal']))
@@ -1201,12 +1201,14 @@ class StatistiquesPage(QWidget):
         self.add_graph(content_layout, "Répartition des Statuts", self.plot_pie_chart)
         self.add_graph(content_layout, "Répartition des Candidats par Sexe", self.plot_bar_chart)
         self.add_graph(content_layout, "Histogramme des Notes par Matière", self.plot_histogram)
+        self.add_graph(content_layout, "Nombre de Sexe par Statut", self.plot_sexe_par_statut)
         
         content_widget.setLayout(content_layout)
         scroll_area.setWidget(content_widget)
         layout.addWidget(scroll_area)
         
         self.setLayout(layout)
+
 
     def traiter_candidats(self, cards_layout):
         """Traite tous les candidats : calcule les notes, met à jour les statuts et calcule la moyenne générale."""
@@ -1259,6 +1261,7 @@ class StatistiquesPage(QWidget):
         card.setLayout(card_layout)
         layout.addWidget(card)
     
+
     def add_graph(self, layout, title, plot_function):
         """Ajoute un graphique avec un titre souligné"""
         title_label = QLabel(f"<u>{title}</u>")
@@ -1272,6 +1275,7 @@ class StatistiquesPage(QWidget):
         
         plot_function(figure)
         layout.addWidget(canvas)
+
 
     def calculer_moyenne_generale(self, candidats):
         """Calcule la moyenne générale des candidats."""
@@ -1298,7 +1302,9 @@ class StatistiquesPage(QWidget):
     def plot_pie_chart(self, figure):
         """Diagramme circulaire pour la répartition des statuts"""
         candidats_statut = get_candidats_avec_statut()
-        labels = ["Admis", "Repêchable au 1er tour", "Second Tour", "Repêchable au 1er tour", "Échoué"]
+        labels = ["Admis Doffice", "Repêchable au 1er tour", "Second Tour", "Repêchable au 2nd tour", "Échoué"]
+        
+        # Compter le nombre de candidats par statut
         sizes = [
             sum(1 for c in candidats_statut if c[-1] == "Admis Doffice"),
             sum(1 for c in candidats_statut if c[-1] == "Repêchable au 1er tour"),
@@ -1306,11 +1312,34 @@ class StatistiquesPage(QWidget):
             sum(1 for c in candidats_statut if c[-1] == "Repêchable au 2nd tour"),
             sum(1 for c in candidats_statut if c[-1] == "Échoué")
         ]
-        colors = ['#4CAF50','#16028a', '#FFC107', '#8b038b', '#F44336']
-        
+
+        # Éviter les erreurs si toutes les tailles sont à zéro
+        if sum(sizes) == 0:
+            sizes = [1] * len(labels)  # Éviter la division par zéro
+            labels = ["Aucun candidat"] * len(labels)
+
+        colors = ['#4CAF50', '#16028a', '#FFC107', '#8b038b', '#F44336']
+
         ax = figure.add_subplot(111)
-        ax.pie(sizes, labels=labels, autopct='%2.1f%%', colors=colors, startangle=90)
+        wedges, texts, autotexts = ax.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors, startangle=90)
+
+        # Équilibrer le graphique
         ax.axis('equal')  
+
+        # Titre du graphique
+        ax.set_title("Répartition des Statuts des Candidats", fontsize=16, fontweight='bold')
+
+        # Améliorer la lisibilité des étiquettes
+        for text in texts:
+            text.set_fontsize(12)
+            text.set_color('black')
+
+        for autotext in autotexts:
+            autotext.set_fontsize(10)
+            autotext.set_color('white')
+
+        # Ajouter une légende à gauche
+        ax.legend(wedges, labels, title="Statuts", loc="center left", bbox_to_anchor=(-0.15, 0, 0.5, 1), fontsize=10)  
     
     def plot_bar_chart(self, figure):
         """Diagramme en barres pour la répartition des sexes"""
@@ -1344,6 +1373,39 @@ class StatistiquesPage(QWidget):
             yval = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2, yval + 0.3, f"{yval:.1f}", ha='center', fontsize=10, fontweight='bold')
 
+
+    def plot_sexe_par_statut(self, figure):
+        """Diagramme en barres pour la répartition des sexes par statut"""
+        candidats_statut = get_all_candidats()  # Récupérer les candidats
+        statuts = ['Admis Doffice', 'Repêchable au 1er tour', 'Second Tour', 'Repêchable au 2nd tour', 'Échoué']  # Exemple de statuts
+        hommes = [sum(1 for c in candidats_statut if c[5] == 'M' and c[-1] == statut) for statut in statuts]
+        femmes = [sum(1 for c in candidats_statut if c[5] == 'F' and c[-1] == statut) for statut in statuts]
+
+        ax = figure.add_subplot(111)
+        bar_width = 0.35
+        index = range(len(statuts))
+
+        bars1 = ax.bar(index, hommes, bar_width, label='Hommes', color='#1E88E5')
+        bars2 = ax.bar([i + bar_width for i in index], femmes, bar_width, label='Femmes', color='#D81B60')
+
+        ax.set_xlabel('Statuts')
+        ax.set_ylabel('Nombre de Candidats')
+        ax.set_title('Répartition des Sexes par Statut')
+        ax.set_xticks([i + bar_width / 2 for i in index])
+        ax.set_xticklabels(statuts)
+        ax.legend()
+        ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+        # Affichage des valeurs sur chaque barre
+        for bar in bars1 + bars2:
+            yval = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, yval + 0.3, f"{yval}", ha='center', fontsize=10, fontweight='bold')
+
+    
+
+
+
+
     def calculer_moyenne_par_matiere(self, sujet):
         """Calcule la moyenne pour une matière donnée."""
         candidats = get_all_candidats()
@@ -1359,9 +1421,9 @@ class StatistiquesPage(QWidget):
             "SVT": "note_svt",
             "Histoire": "note_hg",
             "Anglais": "note_ang1",
-            "Anglais Oral": "note_ang2",
+            "Ang-Oral": "note_ang2",
             "EPS": "note_eps",
-            "Épreuve Facultative": "note_ep_fac",
+            "Ép-Facultative": "note_ep_fac",
             "PC / LV2": "note_pc_lv2"
         }
         

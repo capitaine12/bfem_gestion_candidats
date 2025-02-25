@@ -245,3 +245,4 @@ QPushButton[text="OK"]:hover {
     width: 260px; 
     margin: auto; 
 }
+

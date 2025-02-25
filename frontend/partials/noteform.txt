@@ -1,0 +1,377 @@
+from PyQt5.QtWidgets import (
+    QDialog, QLabel, QLineEdit, QPushButton, QHBoxLayout, QMessageBox, QGridLayout
+)
+from PyQt5.QtCore import Qt
+from backend.database import add_notes, update_notes, get_all_notes  # Import de get_all_notes
+
+class NotesForm(QDialog):
+    """ Fenêtre pour modifier les notes d’un candidat """
+    def __init__(self, parent=None, num_table=None):
+        super().__init__(parent)
+        self.setWindowTitle(f"Modifier Notes - Candidat {num_table}")
+        self.setFixedSize(620, 350)
+
+        self.num_table = num_table
+        self.notes_existantes = get_all_notes(num_table)  # Récupération des notes
+
+        # Vérifier si le candidat a déjà des notes
+        self.is_editing = self.notes_existantes is not None and any(self.notes_existantes)
+
+        # Appliquer un style
+        self.setStyleSheet("""
+        QLineEdit {
+            padding: 6px;
+            font-size: 14px;
+            border: 1px solid rgb(255, 123, 0);
+            border-radius: 15px;
+            background-color: white;             
+        }
+        QLineEdit:focus {
+            border-color: rgb(255, 123, 0);
+            outline: none;
+        }
+        """)
+
+        layout = QGridLayout()
+
+        self.fields = {}
+        self.labels = {
+            "Moy 6e": "moy_6e", "Moy 5e": "moy_5e", "Moy 4e": "moy_4e", "Moy 3e": "moy_3e",
+            "EPS": "note_eps", "Français": "note_cf", "Orthographe": "note_ort", "TSQ": "note_tsq",
+            "SVT": "note_svt", "Anglais": "note_ang1", "Maths": "note_math", "Histoire-Géo": "note_hg",
+            "IC": "note_ic", "PC/LV2": "note_pc_lv2", "Anglais Oral": "note_ang2", "Epreuve Facultative": "note_ep_fac"
+        }
+
+        row, col = 0, 0
+        for index, (label, key) in enumerate(self.labels.items()):
+            lbl = QLabel(f"{label} :")
+            lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            layout.addWidget(lbl, row, col)
+
+            field = QLineEdit()
+            field.setPlaceholderText("Note sur 20")
+            field.setFixedHeight(30)
+
+            # Pré-remplir les champs avec les notes existantes
+            if self.is_editing and self.notes_existantes[index] is not None:
+                field.setText(str(self.notes_existantes[index]))
+
+            layout.addWidget(field, row, col + 1)
+            self.fields[key] = field
+
+            col += 2
+            if col >= 4:
+                col = 0
+                row += 1
+
+        layout.setRowStretch(row + 1, 1)
+
+        # Boutons
+        btn_layout = QHBoxLayout()
+        self.btn_save = QPushButton("Enregistrer")
+        self.btn_cancel = QPushButton("Annuler")
+        btn_layout.addWidget(self.btn_save)
+        btn_layout.addWidget(self.btn_cancel)
+        self.btn_save.setObjectName("btn_save")
+        self.btn_cancel.setObjectName("btn_cancel") 
+
+        layout.addLayout(btn_layout, row + 2, 0, 1, 4)
+        self.setLayout(layout)
+
+        # Connexion des boutons
+        self.btn_save.clicked.connect(self.save_notes)
+        self.btn_cancel.clicked.connect(self.close)
+
+    def mark_invalid_field(self, field, is_invalid):
+        """ Ajoute ou enlève la couleur rouge aux champs ayant une erreur """
+        if is_invalid:
+            field.setStyleSheet("border: 2px solid red; background-color: #ffe6e6;")
+        else:
+            field.setStyleSheet("")
+
+    def save_notes(self):
+        """ Enregistre les nouvelles notes en vérifiant les valeurs """
+        notes = {}
+        has_error = False
+        all_empty = True
+
+        for key, field in self.fields.items():
+            note = field.text().strip()
+
+            # Vérification si le champ est vide
+            if not note:
+                continue  # On ignore les champs vides (facultatif)
+
+            all_empty = False  # Au moins un champ est rempli
+
+            # Vérification du format de la note (chiffre entre 0 et 20)
+            if not note.replace('.', '', 1).isdigit() or float(note) < 0 or float(note) > 20:
+                self.mark_invalid_field(field, True)
+                QMessageBox.warning(self, "Erreur", f"La note de {key} doit être entre 0 et 20.")
+                has_error = True
+            else:
+                self.mark_invalid_field(field, False)
+                notes[key] = float(note)
+
+        # Empêcher l'enregistrement si tous les champs sont vides
+        if all_empty:
+            QMessageBox.warning(self, "Erreur", "Vous devez remplir au moins un champ.")
+            return
+
+        # Si une erreur est détectée, ne pas enregistrer
+        if has_error:
+            return
+
+        # Enregistrement dans la base de données
+        if self.is_editing:
+            update_notes(self.num_table, notes)
+        else:
+            add_notes(self.num_table, notes)
+
+        QMessageBox.information(self, "Succès", "Les notes ont été enregistrées avec succès.")
+        self.accept()
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+def imprimer_pv_deliberation(self):
+        """ Génère un PDF avec le Procès-Verbal de Délibération """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer le PV de Délibération", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  # L'utilisateur a annulé
+
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
+            
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+            
+            elements.append(logo_table)
+            elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
+
+            # Titre du PV
+            elements.append(Paragraph("<b>PROCÈS-VERBAL DE DÉLIBÉRATION 1er TOUR </b>", styles['Title']))
+            elements.append(Spacer(1, 10)) 
+
+            # Date actuelle
+            date_str = datetime.now().strftime("%d/%m/%Y")
+            elements.append(Paragraph(f"Date : {date_str}", styles['Normal']))
+
+            # Récupération des informations du jury
+            jury_info = get_all_jurys()
+            if jury_info:
+                jury = jury_info[0]  # On prend le premier jury
+                jury_text = f"""
+                    <b>IA :</b> {jury[2]}<br/>
+                    <b>IEF :</b> {jury[3]}<br/>
+                    <b>Localité :</b> {jury[4]}<br/>
+                    <b>Centre d'examen :</b> {jury[5]}<br/>
+                    <b>Saison :</b> 2024/2025<br/>
+                    <b>Président du Jury :</b> {jury[6]}<br/>
+                    <b>N° Jury :</b> {jury[1]}<br/>
+                    <b>Examinateurs :</b> Mlle. Diagne, Mlle Diarisso, M. Diop
+                """
+                elements.append(Paragraph(jury_text, styles['Normal']))
+                elements.append(Spacer(1, 10))
+
+            # Récupération des résultats depuis la BDD
+            candidats = get_candidats_avec_statut()
+
+            # Vérification si des candidats existent
+            if not candidats:
+                QMessageBox.warning(self, "Avertissement", "Aucun candidat trouvé dans la base de données.")
+                return
+
+            # Tri des candidats par total de points (du plus élevé au plus bas)
+            candidats.sort(key=lambda x: x[6], reverse=True)
+
+            # Remplacement des statuts "Repêchable au 1er tour" -> "Admis" et "Repêchable au 2nd tour" -> "Second Tour"
+            for i in range(len(candidats)):
+                if candidats[i][7] == "Repêchable au 1er tour":
+                    candidats[i] = (*candidats[i][:7], "Admis Doffice")
+                elif candidats[i][7] == "Repêchable au 2nd tour":
+                    candidats[i] = (*candidats[i][:7], "Second Tour")
+
+            # Définition du tableau des candidats
+            data = [["N° Table", "Prénom", "Nom", "Sexe", "Points", "Statut"]]
+            for candidat in candidats:
+                data.append([
+                    str(candidat[0]), 
+                    candidat[1].capitalize(), 
+                    candidat[2].upper(),
+                    candidat[4].upper(), 
+                    str(candidat[6]), 
+                    candidat[7]
+                ])
+            
+            # Création du tableau
+            table = Table(data, colWidths=[3*cm, 4*cm, 4*cm, 2*cm, 3*cm, 4*cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            elements.append(Spacer(1, 20))  # Espace après le tableau
+
+            # Signatures (placées en bas de la page à gauche)
+            elements.append(Spacer(1, 50))  # Espace pour descendre les signatures
+            elements.append(Paragraph("<b>Signature du Président du Jury :</b> ______________________", styles['Normal']))
+            elements.append(Paragraph("<b>Signature de l'Inspecteur :</b> ______________________", styles['Normal']))
+
+            # Génération du PDF
+            doc.build(elements)
+
+            # Afficher un message de succès
+            QMessageBox.information(self, "Succès", "PV de Délibération enregistré avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+   
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+#imprimer_pv_second_tour
+
+    def imprimer_pv_second_tour(self):
+        """ Génère un PDF avec la liste des candidats au second tour """
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Enregistrer la liste des candidats au second tour", "", "PDF Files (*.pdf);;All Files (*)", options=options
+        )
+
+        if not file_path:
+            return  # L'utilisateur a annulé
+
+        try:
+            doc = SimpleDocTemplate(file_path, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Images : Drapeau et Logo
+            drapeau = Image("frontend/images/drapeau.png", width=1.5*cm, height=1*cm)  
+            logo = Image("frontend/images/logo.png", width=1.5*cm, height=1*cm) 
+            
+            # En-tête officiel
+            header_text = """<para align=center>
+            <b>RÉPUBLIQUE DU SÉNÉGAL</b><br/>
+            Un Peuple - Un But - Une Foi<br/>
+            <b>Ministère de l'Éducation nationale</b><br/><br/>
+            </para>"""
+
+            # Tableau pour le logo, le texte et le drapeau
+            logo_table = Table([[logo, Paragraph(header_text, styles['Normal']), drapeau]], colWidths=[2*cm, None, 2*cm])
+            logo_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('ALIGN', (2, 0), (2, 0), 'CENTER'),
+                ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                ('VALIGN', (2, 0), (2, 0), 'MIDDLE'),
+            ]))
+            
+            elements.append(logo_table)
+            elements.append(Spacer(1, 10))  # Espace entre l'en-tête et le contenu
+
+            # Titre
+            elements.append(Paragraph("<b>PROCÈS-VERBAL DE DÉLIBÉRATION 2nd TOUR</b>", styles['Title']))
+            elements.append(Spacer(1, 10))
+
+            # Récupération des candidats au second tour
+            candidats = get_candidats_second_tour()
+
+            # Vérification si des candidats existent
+            if not candidats:
+                QMessageBox.warning(self, "Avertissement", "Aucun candidat trouvé pour le second tour.")
+                return
+
+            # Définition du tableau des candidats
+            data = [["N° Table", "Prénom", "Nom", "Points", "Statut"]]
+            for candidat in candidats:
+                data.append([
+                    str(candidat[0]), 
+                    candidat[1].capitalize(), 
+                    candidat[2].upper(),
+                    str(candidat[3]), 
+                    candidat[4]
+                ])
+            
+            # Création du tableau
+            table = Table(data, colWidths=[3*cm, 4*cm, 4*cm, 2*cm, 4*cm])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.orange),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold')
+            ]))
+
+            elements.append(table)
+            elements.append(Spacer(1, 20))  # Espace après le tableau
+
+            # Signatures (placées en bas de la page à gauche)
+            elements.append(Spacer(1, 50))  # Espace pour descendre les signatures
+            elements.append(Paragraph("<b>Signature du Président du Jury :</b> ______________________", styles['Normal']))
+            elements.append(Paragraph("<b>Signature de l'Inspecteur :</b> ______________________", styles['Normal']))
+
+            # Génération du PDF
+            doc.build(elements)
+
+            QMessageBox.information(self, "Succès", "Liste des candidats au second tour enregistrée avec succès !")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue : {e}")
+
+
+
+
+self.setStyleSheet("""
+            QLabel {
+                font-size: 16px;
+                color: #333;
+                margin: 10px;
+            }
+            QLineEdit {
+                border: 2px solid orange;
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 14px;
+                background-color: white;
+            }
+            QPushButton#btnConnexion {
+                background-color: #ff6600;
+                color: white;
+                padding: 12px;
+                border-radius: 10px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            QPushButton#btnConnexion:hover {
+                background-color: #e65c00;
+            }
+        """)
