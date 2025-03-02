@@ -128,8 +128,9 @@ class DashboardPage(QWidget):
 
     def open_cards_window(self):
         """Ouvre la fenêtre des cartes."""
-        # Remplacez cette partie par votre implémentation réelle
-        print("Fenêtre des cartes ouverte")
+        cards_window = CardsWindow()
+        cards_window.exec_()  # Affiche la fenêtre modale
+
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
 #!::::::::::::::::::::::::::::::::::::::::::::::::::::: PAGE CANDIDAT ::::::::::::::::::::::::::::::::::::::::
@@ -229,16 +230,25 @@ class CandidatsPage(QWidget):
         self.table.itemSelectionChanged.connect(self.update_button_states)
 
     def load_candidats(self, candidats=None):
-        """Charge les candidats depuis SQLite et les affiche dans le tableau"""
+        """Charge les candidats depuis SQLite et les affiche dans le tableau."""
         if candidats is None:
             candidats = get_all_candidats()
 
-        self.table.setRowCount(len(candidats))
+        if candidats is None:  # Vérifie si get_all_candidats() a échoué
+            logging.error("❌ Erreur : Impossible de récupérer les candidats (get_all_candidats() a retourné None).")
+            QMessageBox.critical(self, "Erreur", "Impossible de charger les candidats. Vérifiez la base de données.")
+            candidats = []  # Empêche le plantage
+
+        self.table.setRowCount(len(candidats))  # Évite l'erreur si candidats est None
+
         for row, candidat in enumerate(candidats):
             for col, valeur in enumerate(candidat):
                 item = QTableWidgetItem(str(valeur))
                 item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.table.setItem(row, col, item)
+
+        logging.info(f"📌 Chargement des candidats terminé. {len(candidats)} candidats affichés.")
+
 
     def search_candidat(self):
         """Recherche un candidat par numéro de table ou nom"""

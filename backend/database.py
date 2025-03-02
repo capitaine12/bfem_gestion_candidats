@@ -207,29 +207,34 @@ def candidat_existe(num_table):
 
 # Fonction pour récupérer tous les candidats
 def get_all_candidats():
+    """ Récupère tous les candidats et évite les retours None. """
     conn = None
+    candidats = []  # Toujours retourner une liste, même vide
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-    except sqlite3.OperationalError as e:
-        logging.error(f"⚠️ Base de données verrouillée : {e}")
-        return
-    
-    try:
+
         cursor.execute("""
-        SELECT c.num_table, c.prenom, c.nom, c.date_naissance, c.lieu_naissance, 
-               c.sexe, c.nationalite, c.epreuve_facultative, 
-               c.aptitude_sportive, COALESCE(d.statut, 'Non délibéré') AS statut
-        FROM candidats c
-        LEFT JOIN deliberation d ON c.id = d.candidat_id 
-        ORDER BY c.nom, c.date_naissance, c.sexe ASC
+            SELECT c.num_table, c.prenom, c.nom, c.date_naissance, c.lieu_naissance, 
+                   c.sexe, c.nationalite, c.epreuve_facultative, 
+                   c.aptitude_sportive, COALESCE(d.statut, 'Non délibéré') AS statut
+            FROM candidats c
+            LEFT JOIN deliberation d ON c.id = d.candidat_id 
+            ORDER BY c.nom, c.date_naissance, c.sexe ASC
         """)
 
         candidats = cursor.fetchall()
+
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Base de données verrouillée ou inaccessible : {e}")
+    except sqlite3.Error as e:
+        logging.error(f"❌ Erreur SQL dans get_all_candidats() : {e}")
     finally:
         if conn is not None:
             conn.close()
-    return candidats
+
+    return candidats  # Toujours une liste, même vide
 
 
 # recuperation des notes des candidats
@@ -267,32 +272,36 @@ def get_all_notes(num_table):
 
 
 # recuperation de candidat avec son status
-def get_candidats_avec_statut():
+def get_candidats_avec_statut(): 
     """ Récupère tous les candidats avec leur statut de délibération """
     conn = None
+    candidats = []  # Assurer un retour valide, même en cas d'erreur
 
     try:
-
         conn = get_db_connection()
         cursor = conn.cursor()
 
         cursor.execute("""
             SELECT c.num_table, c.prenom, c.nom, c.date_naissance, c.sexe, 
-                c.nationalite, d.total_points, COALESCE(d.statut, 'Non délibéré')
+                   c.nationalite, d.total_points, COALESCE(d.statut, 'Non délibéré')
             FROM candidats c
             LEFT JOIN deliberation d ON c.id = d.candidat_id 
             ORDER BY c.nom, c.date_naissance
         """)
         
         candidats = cursor.fetchall()
-    
-    except Exception as e:
-        logging.error(f"❌ Erreur lors de l'ajout du jury : {e}")
 
+    except sqlite3.OperationalError as e:
+        logging.error(f"⚠️ Problème de connexion à la base de données : {e}")
+    except sqlite3.Error as e:
+        logging.error(f"❌ Erreur SQL dans get_candidats_avec_statut : {e}")
+    except Exception as e:
+        logging.error(f"⚠️ Erreur inattendue dans get_candidats_avec_statut : {e}")
     finally:
-        if conn is not None:  # Fermer la connexion seulement si elle a été ouverte
+        if conn is not None:  
             conn.close()
-    return candidats
+
+    return candidats  # Toujours une liste, jamais None
 
 
 def get_all_jurys():

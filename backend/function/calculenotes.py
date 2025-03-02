@@ -109,8 +109,13 @@ def calculer_statut_candidat(num_table, conn=None):
 
 def recalculer_tous_les_statuts():
     """ Recalcule le statut de tous les candidats et met à jour la table délibération """
+    conn = None  # ✅ Toujours définir conn avant son utilisation
     try:
         conn = get_db_connection()
+        if conn is None:  # Vérifie si la connexion est bien établie
+            logging.error("⚠️ Impossible d'établir une connexion avec la base de données.")
+            return
+
         cursor = conn.cursor()
 
         logging.info("📌 Début du recalcul de tous les statuts...")
@@ -118,17 +123,21 @@ def recalculer_tous_les_statuts():
         cursor.execute("SELECT num_table FROM candidats")
         candidats = cursor.fetchall()
 
+        if not candidats:
+            logging.warning("⚠️ Aucun candidat trouvé pour recalculer les statuts.")
+            return
+
         for candidat in candidats:
             num_table = candidat[0]
             logging.info(f"🔄 Recalcul du statut pour le candidat {num_table}...")
             calculer_statut_candidat(num_table, conn)  # Utilise la même connexion
 
-        conn.commit()  # Valide toutes les mises à jour en une seule fois
+        conn.commit()  # ✅ Valide toutes les mises à jour en une seule fois
         logging.info("✅ Recalcul des statuts terminé.")
 
     except Exception as e:
         logging.error(f"❌ Erreur lors du recalcul des statuts : {e}")
 
     finally:
-        if conn is not None:
+        if conn:  # ✅ Vérifie toujours si la connexion a été établie avant de fermer
             conn.close()

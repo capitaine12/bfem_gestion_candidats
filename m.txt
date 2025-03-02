@@ -1,17 +1,9 @@
-import logging
-import sys
-import os
-
+import logging, sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# 📌 Vérification et création du dossier logs
-log_dir = "logs"
-log_file = os.path.join(log_dir, "app.log")
+# Configuration du logging
+log_file = "logs/app.log"
 
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir, exist_ok=True)  # 🔥 Crée automatiquement le dossier logs s'il n'existe pas
-
-# 🔥 Configuration du logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -28,6 +20,9 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from frontend.views import MainWindow
 from backend.loginwindow import LoginWindow
 from backend.function.import_notes import import_notes_from_excel, import_livret_scolaire_from_excel
+
+
+
 
 def load_stylesheet(app):
     stylesheet_path = os.path.join("frontend", "styles.qss")
