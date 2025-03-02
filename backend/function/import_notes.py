@@ -18,6 +18,7 @@ def import_notes_from_excel(excel_file,main_window):
     """ Importe les notes depuis un fichier Excel et met à jour le statut des candidats """
     logging.info("🔍 Début de l'importation des notes depuis Excel...")
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -90,13 +91,16 @@ def import_notes_from_excel(excel_file,main_window):
         logging.error(f"❌ Erreur lors de l'importation des notes : {e}")
 
     finally:
-        conn.close()
+        if conn is not None:
+            conn.close()
+
 
 
 def import_livret_scolaire_from_excel(excel_file):
     """ Importe les livrets scolaires depuis un fichier Excel """
     logging.info("📌 Début de l'importation du livret scolaire...")
 
+    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -137,4 +141,6 @@ def import_livret_scolaire_from_excel(excel_file):
         logging.error(f"❌ Erreur lors de l'importation du livret scolaire : {e}")
     
     finally:
-        conn.close()
+        if conn is not None:
+            conn.close()
+

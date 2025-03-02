@@ -130,4 +130,5 @@ def recalculer_tous_les_statuts():
         logging.error(f"❌ Erreur lors du recalcul des statuts : {e}")
 
     finally:
-        conn.close()
+        if conn is not None:
+            conn.close()

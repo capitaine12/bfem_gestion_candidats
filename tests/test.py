@@ -15,6 +15,7 @@ from frontend.views import CandidatsPage,StatistiquesPage
 
 
 
+
 """ from backend.function.calculenotes import recalculer_tous_les_statuts
 recalculer_tous_les_statuts()
 num_table = 101

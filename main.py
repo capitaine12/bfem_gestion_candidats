@@ -1,13 +1,14 @@
 import logging
-import os
-import sys
 from PyQt5.QtWidgets import QApplication, QDialog
 from frontend.views import MainWindow
 from backend.loginwindow import LoginWindow
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from backend.function.import_notes import import_notes_from_excel, import_livret_scolaire_from_excel
 
 # Configuration du logging
 log_file = "logs/app.log"
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -16,6 +17,10 @@ logging.basicConfig(
         logging.StreamHandler(sys.stdout)
     ]
 )
+
+logger = logging.getLogger(__name__)
+logger.info("🚀 Démarrage du script main.py")
+
 
 def load_stylesheet(app):
     stylesheet_path = os.path.join("frontend", "styles.qss")
